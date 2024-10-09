@@ -1,13 +1,86 @@
 /* eslint-disable */
+import { getParticipantDetails } from "../services";
 import { initProfile, resetProfile } from "../store/slices/profileInfo";
-import { resetStudentProfile } from "../store/slices/studentsInfo";
+import { initStudentProfile, resetStudentProfile } from "../store/slices/studentsInfo";
 import { resetAuth, setUserAuthStatus } from "../store/slices/userAuthSlice";
+import { initUserProfile } from "../store/slices/userInfo";
 import { store } from "../store/store";
 import { COMPONENTS } from "./enums";
 
 const dispatch = store.dispatch;
 let token = localStorage.getItem("_campaign_token");
 let role = localStorage.getItem("role");
+
+const getMember = async () => {
+  try {
+    const response = await getParticipantDetails(""); 
+    if (!response || !response.data || !response.data.data) {
+      console.error("No valid data in response");
+      return;
+    }
+    localStorage.setItem("memberId", response.data.data._id);
+
+    const attendees: any[] = [];
+    const nonAttendees: any[] = [];
+    response.data.data?.visits?.forEach((event: any) => {
+      event.participants.forEach((participant: any) => {
+        if (participant.userType === "Attendee") {
+          attendees.push(participant);
+        } else {
+          nonAttendees.push(participant);
+        }
+      });
+    });
+console.log(nonAttendees)
+    // if (attendees.length > 0) {
+      dispatch(
+        initStudentProfile({
+          requestStatus: "initiated",
+          responseStatus: "recieved",
+          haveAnIssue: false,
+          issue: "",
+          data: attendees, 
+        })
+      );
+    // }
+
+    // if (nonAttendees.length > 0) {
+      dispatch(
+        initUserProfile({
+          requestStatus: "initiated",
+          responseStatus: "recieved",
+          haveAnIssue: false,
+          issue: "",
+          data: nonAttendees, 
+        })
+      );
+    // }
+
+    dispatch(
+      initProfile({
+        requestStatus: "initiated",
+        responseStatus: "recieved",
+        haveAnIssue: false,
+        issue: "",
+        data: response.data,
+      })
+    );
+
+    return {
+      _id: response.data._id,
+      name: response.data.name,
+      institutionName: response.data.institutionName,
+      displayPicSrc: response.data.displayPicSrc
+        ? response.data.displayPicSrc
+        : "https://res.cloudinary.com/dffdp7skh/image/upload/v1706879929/nvitahnrlhvmtcizpthx.png", // Default image if not provided
+      email: response.data.email,
+      userType: response.data.userType,
+      role: response.data.role,
+    };
+  } catch (err) {
+    console.error("Error fetching participant details:", err);
+  }
+};
 
 
 export const checkUser = async () => {
@@ -20,14 +93,13 @@ export const checkUser = async () => {
         role:role,
       })
     );
+    if(token){
+      getMember();
+    }
    
 };
 
-  
 export const logOut = () =>{
-    resetAuth();
-    // resetProfile();
-    // resetStudentProfile();
   window.location.href = "/login";
 }  
 

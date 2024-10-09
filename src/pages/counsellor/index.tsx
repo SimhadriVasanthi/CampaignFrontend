@@ -16,11 +16,13 @@ import { setPopup } from "../../store/slices/popupSlice";
 import { useLocation } from "react-router-dom";
 import { getParticipantDetails } from "../../services";
 import { setWordCase } from "../../assets/library";
+import { AnyAaaaRecord } from "dns";
 
 const Counsellor = () => {
   const studentsData = useAppSelector((state) => state.studentInfo);
+  const usersData = useAppSelector((state) => state.userInfo);
   const auth = localStorage.getItem("_campaign_token")
-
+  // console.log(usersData)
   const role = localStorage.getItem("role")
   const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<
@@ -35,111 +37,6 @@ const Counsellor = () => {
     }
   }, [role]);
 
-  const studentDetails = async () => {
-    try {
-      const response = await getParticipantDetails("");
-      if (response) {
-        localStorage.setItem("memberId", response.data.data._id)
-        dispatch(
-          initStudentProfile({
-            requestStatus: "initiated",
-            responseStatus: "recieved",
-            haveAnIssue: false,
-            issue: "",
-            data: response.data.data.visits,
-          })
-        );
-      }
-    } catch (err) {
-      console.log(err)
-    }
-
-  };
-
-  useEffect(() => {
-    if (auth) {
-      studentDetails()
-    }
-  }, [])
-
-  // const students = [
-  //   { firstName: "firstName", lastName: "firstName", email: "firstName", phone: "" },
-  //   { firstName: "firstName", lastName: "firstName", email: "firstName", phone: "" },
-  //   { firstName: "firstName", lastName: "firstName", email: "firstName", phone: "" },
-
-  // ]
-
-  const usersData = [
-    { name: "name", booth: "name", institution: "name", role: "name" }
-  ]
-  //   const studentDetails = async () => {
-  //     const response = await allstudentDetails("students", { filterData: [] });
-  //     // console.log(response);
-  //     if (response) {
-  //       dispatch(
-  //         initStudentProfile({
-  //           requestStatus: "initiated",
-  //           responseStatus: "recieved",
-  //           haveAnIssue: false,
-  //           issue: "",
-  //           data: response.data.list,
-  //         })
-  //       );
-  //     }
-  //   };
-
-  //   const applicationDetails = async () => {
-  //     let response;
-
-  //     if (role === "counsellor") {
-  //       response = await allstudentDetails("users", {
-  //         filterData: [],
-  //       });
-  //     } else {
-  //       response = await allstudentDetails("users", {
-  //         filterData: filterData,
-  //       });
-  //     }
-
-  //     if (response.success) {
-  //       dispatch(
-  //         initusers({
-  //           requestStatus: "initiated",
-  //           responseStatus: "recieved",
-  //           haveAnIssue: false,
-  //           issue: "",
-  //           data: response.data.list,
-  //         })
-  //       );
-  //     } else {
-  //       console.error("Failed to fetch application details", response);
-  //     }
-
-  //     return response;
-  //   };
-
-  //   const leadDetails = async () => {
-  //      const response = await allstudentDetails("leads", {
-  //         filterData: [],
-  //       });
-  //     if (response.success) {
-  //      setLeadsData(response.data.list)
-  //     } else {
-  //       console.error("Failed to fetch application details", response);
-  //     }
-  //     return response;
-  //   }; 
-  //   const newStudents = async () => {
-  //     const response = await newstudentDetails({
-  //        filterData: [],
-  //      });
-  //    if (response.success) {
-  //     setnewStudentsData(response.data?.list)
-  //    } else {
-  //      console.error("Failed to fetch application details", response);
-  //    }
-  //    return response;
-  //  }; 
 
   return (
     <Box>
@@ -205,7 +102,7 @@ const Counsellor = () => {
       <MainComponent
         activeTab={activeTab}
         students={studentsData}
-        users={usersData}
+        users={usersData?.data}
       />
     </Box>
   );
@@ -266,16 +163,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
     // eslint-disable-next-line
   }, [])
 
-
   const mapStudentData = (events: any) => {
-    const memberId = localStorage.getItem("memberId");
-
-    return events?.data?.map((event: any) => {
-      const filteredParticipants = event.participants.filter(
-        (participant: any) => participant._id !== memberId
-      );
-      const participant = filteredParticipants[0];
-      return (
+    // const memberId = localStorage.getItem("memberId");
+    const role = localStorage.getItem("role")
+    // console.log(events)
+    return events?.data?.map((participant: any) =>  (
         {
           name: (
             <>
@@ -285,18 +177,22 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 id={participant?._id}
                 type={participant?.userType}
               />
-              <Box sx={{marginLeft:"3.5rem"}}>
+              {
+                role === "Admin" ? "" :
+                  <Box sx={{ marginLeft: "3.5rem" }}>
 
-                {events?.data?.map((item: any) => (
-                  item?.details?.map((visit: any) => (
-                    <>
-                      {setWordCase(visit?.label)} : {visit?.data} <br />
-                    </>
-                  ))
+                    {events?.data?.map((item: any) => (
+                      item?.details?.map((visit: any) => (
+                        <>
+                          {setWordCase(visit?.label)} : {visit?.data} <br />
+                        </>
+                      ))
 
-                ))}
+                    ))}
 
-              </Box>
+                  </Box>
+              }
+
             </>
           ),
           city: participant?.city,
@@ -328,8 +224,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </>),
 
         }
-      )
-    });
+    )
+    );
   };
 
   const studentcolumns = [
@@ -347,14 +243,14 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   const usercolumns = [
     { key: "name", name: "Name", minWidth: 200 },
-    { key: "booth", name: "Booth Number", minWidth: 200 },
+    { key: "boothNumber", name: "Booth Number", minWidth: 200 },
     { key: "institutionName", name: "Institution Name", minWidth: 200 },
     { key: "role", name: "Role", minWidth: 200 },
   ];
-  const mapLeadsData = (leadsData: any[]) => {
-    return leadsData.map(student => ({
+  const mapLeadsData = (leadsData: any) => {
+    return leadsData.map((student:any) => ({
       name: student?.name,
-      booth: student?.booth,
+      boothNumber: student?.boothNumber,
       institutionName: student?.institutionName,
       role: student?.role || "N/A",
     }));

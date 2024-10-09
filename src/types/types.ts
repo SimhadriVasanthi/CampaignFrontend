@@ -192,6 +192,7 @@ export interface StudentProfile {
         stage: string;
         _id: string;
     }
+
 export interface Course {
     _id: string;
     name: string;
@@ -209,39 +210,6 @@ export interface Course {
 
 
 
-   export interface Application {
-      approval: Approval;
-      _id: string;
-      university: University;
-      course: Courses;
-      intake: string; // ISO 8601 date string
-      user: UserProfile;
-      processCoordinator: ProcessCoordinator;
-      counsellor: Counsellor;
-      cancellationRequest: boolean;
-      log: LogEntry[];
-      status: string;
-      stage: string;
-      docChecklist: any[];
-      createdAt: string; // ISO 8601 date string
-      updatedAt: string; // ISO 8601 date string
-      __v: number;
-      deadline: string | null; // ISO 8601 date string or null
-    }
-    
-    interface Approval {
-      counsellorApproval: boolean;
-      justification: string;
-    }
-    
-    interface University {
-      location: Location;
-      _id: string;
-      name: string;
-      logoSrc: string;
-      type: string;
-      establishedYear: number;
-    }
     
     interface Location {
       country: string;
@@ -265,7 +233,7 @@ export interface Course {
       applicationFeeLink: string;
     }
     
-    interface UserProfile {
+    export interface UserProfile {
       _id: string;
       displayPicSrc: string;
       email: string;
@@ -341,7 +309,7 @@ export interface Store {
   counsellorinfo: StoreItem<any>;
   testscores: StoreItem<any>;
   preferences: StoreItem<any>;
-  applications: StoreItem<Application[]>;
+  // applications: StoreItem<Application[]>;
   documents: StoreItem<any>;
   communityposts: StoreItem<any>;
   communityfeed: StoreItem<any>;
@@ -504,13 +472,7 @@ export interface FilterInfo {
   handler?:(data:{type:string,data:any,appliedFilters:FilterSelected[]})=>FilterSelected,
   searchbox:boolean;
 }
-export interface Applications {
-  processing: Application[];
-  accepted: Application[];
-  rejected: Application[];
-  completed: Application[];
-  cancelled: Application[];
-}
+
 export interface Profile {
   _id: string;
   firstName: string;

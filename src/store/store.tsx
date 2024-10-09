@@ -3,6 +3,7 @@ import popupSlice from "./slices/popupSlice";
 import ProfileSlice from "./slices/profileInfo";
 import studentsInfo from "./slices/studentsInfo";
 import userAuthSlice from "./slices/userAuthSlice";
+import usersInfo from "./slices/userInfo";
 
 export const store = configureStore({
   reducer: {
@@ -10,7 +11,7 @@ export const store = configureStore({
     profileInfo: ProfileSlice,
     studentInfo: studentsInfo,
     popup:popupSlice,
-
+    userInfo: usersInfo,
   },
 });
 

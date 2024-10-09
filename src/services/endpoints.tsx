@@ -8,9 +8,9 @@ export const registerUserEndPoint = () => {
 
 
 export const singleParticipantEndPoint = (id:string) => {
-  return `/api/v1/participants/?s=${id}`;
+  return `api/v1/participants/?s=${id}`;
 };
 
 export const visitEndPoint = () =>{
-  return `/api/v1/visit`
+  return `api/v1/visit`
 }

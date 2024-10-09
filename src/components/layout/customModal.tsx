@@ -12,7 +12,7 @@ const CustomModal = ({ open, children,additionalData }: ModalDialogprops<{ width
     <>
       <Dialog
         open={open}
-        onClose={()=>dispatch(closePopup())}
+        // onClose={()=>dispatch(closePopup())}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         PaperProps={{

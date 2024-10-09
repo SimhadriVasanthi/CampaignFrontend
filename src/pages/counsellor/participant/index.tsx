@@ -18,13 +18,12 @@ const Index = (props: any) => {
   const pId = props.data;
   const [participant, setParticipant] = useState<any>()
   const [vist, setVisit] = useState<any>()
-
+const role = localStorage.getItem("role")
   const [loading, setLoading] = useState(false)
 
   const partcipantDetails = async (id: string) => {
     setLoading(true)
     try{
-   
     const response = await getParticipantDetails(id);
     if (response) {
       setParticipant(response.data.data)
@@ -54,8 +53,12 @@ const Index = (props: any) => {
           <Section1 data={participant} />
           <Divider sx={{ my: 2 }} />
           <Section2 data={participant} />
+          { role === "Admin"? "" :
+          <Box>
           <Divider sx={{ my: 2 }} />
           <SingleUser data={vist} id={participant?._id} />
+          </Box> }
+          
         </>}
 
     </div>

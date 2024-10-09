@@ -125,9 +125,9 @@ const LoginComp = () => {
                             <Button
                               sx={[{
                                 width: "100px",
-                                border: "1px solid #3b3f76",
+                                background: "#3b3f76",
                                 textTransform: "none",
-                                color: "#3b3f76",
+                                color: "#fff",
                                 borderRadius: "15px",
                                 padding: 0,
                               }]}

@@ -106,15 +106,12 @@ export const UserCard = (props:any) =>{
 }
 
 export const ParticipantCard = (props: any) => {
-  const memberId = localStorage.getItem("memberId");
+  // const memberId = localStorage.getItem("memberId");
   const dispatch = useAppDispatch()
   const navigate = useNavigate();
 // console.log(props)
 
-    const filteredParticipants = props.data?.participants.filter(
-      (participant: any) => participant._id !== memberId
-    );
-    const participant = filteredParticipants[0];
+    const participant = props.data;
     const handleClick = () => {
       navigate(`/?s=${participant._id}&p=true`)
       dispatch(

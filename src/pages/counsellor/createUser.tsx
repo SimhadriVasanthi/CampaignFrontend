@@ -1,12 +1,14 @@
-import { Box, Button, Grid, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Grid, MenuItem, Select, TextField } from '@mui/material';
 import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import Images from '../../assets';
 import { registerUser } from '../../services';
+import { useAppDispatch } from '../../assets/hooks';
+import { addUserProfile } from '../../store/slices/userInfo';
 
 const CreateUser = () => {
     const [loading, setLoading] = useState(false);
-
+const dispatch = useAppDispatch();
     const generatePassword = () => {
         const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]';
         const passwordLength = 12;
@@ -19,9 +21,15 @@ const CreateUser = () => {
     };
 
     const submit = async (values: any) => {
-        console.log(values);
+        setLoading(true)
+        try {
         const response = await registerUser(values)
-        console.log(response)
+        dispatch(addUserProfile(response.data.data.user))
+        setLoading(false)
+
+        }catch(err){
+            setLoading(false)
+        }
     };
 
     const initialValues = {

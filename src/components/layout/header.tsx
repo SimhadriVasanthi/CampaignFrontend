@@ -77,7 +77,14 @@ const Header = (props: FilterProps) => {
                 </Typography>
               </Box>
               <Button
-                variant="contained"
+                sx={[{
+                  width: "100px",
+                  background: "#3b3f76",
+                  textTransform: "none",
+                  color: "#fff",
+                  borderRadius: "15px",
+                  padding: 0,
+                }]}
                 onClick={() => {
                   localStorage.clear();
                   logOut();
