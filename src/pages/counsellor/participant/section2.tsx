@@ -1,5 +1,7 @@
 import { Typography } from '@mui/material';
 import React, { useRef, useState } from 'react';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const Education = (data: any) => {
     return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -50,9 +52,7 @@ const Exams = (data: any) => {
 
     </div>;
 };
-
-
-const Section2 = (data:any) => {
+const Section2 = (data: any) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const touchStartX = useRef(0);
     const touchEndX = useRef(0);
@@ -63,25 +63,33 @@ const Section2 = (data:any) => {
         <Exams data={data.data} />,
     ];
 
-    const handleTouchStart = (e:any) => {
+    const handleTouchStart = (e: any) => {
         touchStartX.current = e.touches[0].clientX;
     };
 
-    const handleTouchMove = (e:any) => {
+    const handleTouchMove = (e: any) => {
         touchEndX.current = e.touches[0].clientX;
     };
 
     const handleTouchEnd = () => {
         const deltaX = touchStartX.current - touchEndX.current;
 
-        if (deltaX > 50) {
-            if (activeIndex < components.length - 1) {
-                setActiveIndex(activeIndex + 1);
-            }
-        } else if (deltaX < -50) {
-            if (activeIndex > 0) {
-                setActiveIndex(activeIndex - 1);
-            }
+        if (deltaX > 50 && activeIndex < components.length - 1) {
+            setActiveIndex(activeIndex + 1);
+        } else if (deltaX < -50 && activeIndex > 0) {
+            setActiveIndex(activeIndex - 1);
+        }
+    };
+
+    const goToNext = () => {
+        if (activeIndex < components.length - 1) {
+            setActiveIndex(activeIndex + 1);
+        }
+    };
+
+    const goToPrevious = () => {
+        if (activeIndex > 0) {
+            setActiveIndex(activeIndex - 1);
         }
     };
 
@@ -90,7 +98,7 @@ const Section2 = (data:any) => {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            style={{ touchAction: 'pan-y' }} 
+            style={{ position: 'relative', touchAction: 'pan-y' }}
         >
             <div>{components[activeIndex]}</div>
 
@@ -111,9 +119,45 @@ const Section2 = (data:any) => {
                     ></span>
                 ))}
             </div>
+
+            {activeIndex > 0 && (
+                <button
+                    onClick={goToPrevious}
+                    style={{
+                        position: 'absolute',
+                        left: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <ChevronLeftIcon/>
+                </button>
+            )}
+
+            {activeIndex < components.length - 1 && (
+                <button
+                    onClick={goToNext}
+                    style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        // fontSize: '24px',
+                    }}
+                >
+                    <ChevronRightIcon/>
+                </button>
+            )}
         </div>
     );
 };
+
 
 
 export default Section2;

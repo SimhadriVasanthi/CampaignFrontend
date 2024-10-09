@@ -70,7 +70,7 @@ const getMember = async () => {
         responseStatus: "recieved",
         haveAnIssue: false,
         issue: "",
-        data: response.data,
+        data: response.data.data,
       })
     );
 

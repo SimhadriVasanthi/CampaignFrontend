@@ -168,7 +168,6 @@ console.log(students)
   const mapStudentData = (events: any) => {
     // const memberId = localStorage.getItem("memberId");
     const role = localStorage.getItem("role")
-    console.log(events)
     return events?.data?.map((participant: any) =>  (
         {
           name: (
