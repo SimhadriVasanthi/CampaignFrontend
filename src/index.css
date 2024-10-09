@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select:none;
+    font-family: 'Neutrif Studio', sans-serif !important;
+    scroll-behavior: smooth;
+}
+*{
+  font-family: 'Neutrif Studio', sans-serif !important;
+  
+}

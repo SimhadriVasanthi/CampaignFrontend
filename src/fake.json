@@ -1,0 +1,33 @@
+{
+    name: ${req.body.firstName} ${req.body.lastName},
+    email: req.body.email,
+    about: req.body.about,
+    city: req.body.city,
+    whatsappNumber: req.body.whatsappNumber,
+    mobileNumber: req.body.mobileNumber,
+    ticketNumber: req.body.uniqueID,
+    college: req.body.college,
+    degree: req.body.degree,
+    gradepercentage: req.body.gradepercentage,
+    graduation: req.body.graduation,
+    year: req.body.year,
+    educationBudget: req.body.educationBudget,
+    country: req.body.country,
+    course: req.body.course,
+    educationloan: req.body.educationloan,
+    aptitude: req.body.aptitude,
+    gre: req.body.gre,
+    gmat: req.body.gmat,
+    sat: req.body.sat,
+    act: req.body.act,
+    language: req.body.language,
+    toefl: req.body.toefl,
+    pte: req.body.pte,
+    ielts: req.body.ielts,
+    duolingo: req.body.duolingo,
+
+
+
+    leadSource: req.body.leadSource,
+    addedTime: req.body.addedTime
+}

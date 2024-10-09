@@ -1,0 +1,73 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin:12px
+  }
+  
+  .message {
+    max-width: 80%;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    position: relative;
+    min-width: 24px;
+  }
+  
+  .sent {
+    align-self: flex-end;
+    color:#fff;
+    background-color: #72D4D1; 
+  }
+  
+  .received {
+    align-self: flex-start;
+    background-color: #fff; 
+  }
+  
+  .seenMsg {
+    font-size: 0.7em;
+    color: #888;
+    align-self: flex-end;
+  }
+
+  iframe.custom-iframe {
+    border: none;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    pointer-events: none; /* Disable all pointer events */
+    overflow: auto; /* Ensure scrolling works */
+  }
+  
+  iframe.custom-iframe:hover {
+    pointer-events: auto; /* Re-enable pointer events (scrolling) on hover */
+  }
+
+  .otpinput{
+    width:2rem;
+    height: 2rem;
+    text-align: center;
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar {
+    width: 4px; /* Adjust the width as needed */
+  }
+  
+  /* WebKit (Chrome, Safari, Opera) */
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  /* Mozilla Firefox */
+  ::-moz-scrollbar {
+    width: 4px; /* Adjust the width as needed */
+  }
+  
+  /* Mozilla Firefox */
+  ::-moz-scrollbar-thumb {
+    background-color: #ccc; /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Rounded corners */
+  }
