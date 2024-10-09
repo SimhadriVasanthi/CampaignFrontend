@@ -127,6 +127,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   users,
 }) => {
   const [columns, setColumns] = useState<any[]>([]);
+console.log(students)
+
   const dispatch = useAppDispatch()
   useEffect(() => {
     if (activeTab === "students") {
@@ -166,7 +168,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const mapStudentData = (events: any) => {
     // const memberId = localStorage.getItem("memberId");
     const role = localStorage.getItem("role")
-    // console.log(events)
+    console.log(events)
     return events?.data?.map((participant: any) =>  (
         {
           name: (
@@ -181,14 +183,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 role === "Admin" ? "" :
                   <Box sx={{ marginLeft: "3.5rem" }}>
 
-                    {events?.data?.map((item: any) => (
-                      item?.details?.map((visit: any) => (
+                    {
+                      participant?.details?.map((visit: any) => (
                         <>
                           {setWordCase(visit?.label)} : {visit?.data} <br />
                         </>
                       ))
-
-                    ))}
+                    }
 
                   </Box>
               }

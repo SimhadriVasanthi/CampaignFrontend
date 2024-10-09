@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 const Education = (data: any) => {
     return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -51,13 +51,47 @@ const Exams = (data: any) => {
     </div>;
 };
 
-const Section2 = (data: any) => {
-    const [activeIndex, setActiveIndex] = useState(0);
 
-    const components = [<Education data={data.data} />, <Abroad data={data.data} />, <Exams data={data.data} />];
+const Section2 = (data:any) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const touchStartX = useRef(0);
+    const touchEndX = useRef(0);
+
+    const components = [
+        <Education data={data.data} />,
+        <Abroad data={data.data} />,
+        <Exams data={data.data} />,
+    ];
+
+    const handleTouchStart = (e:any) => {
+        touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e:any) => {
+        touchEndX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        const deltaX = touchStartX.current - touchEndX.current;
+
+        if (deltaX > 50) {
+            if (activeIndex < components.length - 1) {
+                setActiveIndex(activeIndex + 1);
+            }
+        } else if (deltaX < -50) {
+            if (activeIndex > 0) {
+                setActiveIndex(activeIndex - 1);
+            }
+        }
+    };
 
     return (
-        <div>
+        <div
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ touchAction: 'pan-y' }} 
+        >
             <div>{components[activeIndex]}</div>
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
@@ -80,5 +114,6 @@ const Section2 = (data: any) => {
         </div>
     );
 };
+
 
 export default Section2;

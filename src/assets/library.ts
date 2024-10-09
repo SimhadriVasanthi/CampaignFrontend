@@ -13,7 +13,7 @@ let role = localStorage.getItem("role");
 
 const getMember = async () => {
   try {
-    const response = await getParticipantDetails(""); 
+    const response = await getParticipantDetails("");
     if (!response || !response.data || !response.data.data) {
       console.error("No valid data in response");
       return;
@@ -23,37 +23,45 @@ const getMember = async () => {
     const attendees: any[] = [];
     const nonAttendees: any[] = [];
     response.data.data?.visits?.forEach((event: any) => {
-      event.participants.forEach((participant: any) => {
+      const { details, notes, participants } = event; // Extracting details and notes
+
+      participants.forEach((participant: any) => {
+        const combinedData = {
+          ...participant, // Participant data
+          details,        // Details array
+          notes,          // Notes value
+        };
+
+        // Separate participants based on userType and push combined data
         if (participant.userType === "Attendee") {
-          attendees.push(participant);
+          attendees.push(combinedData);
         } else {
-          nonAttendees.push(participant);
+          nonAttendees.push(combinedData);
         }
       });
-    });
-console.log(nonAttendees)
+    })
     // if (attendees.length > 0) {
-      dispatch(
-        initStudentProfile({
-          requestStatus: "initiated",
-          responseStatus: "recieved",
-          haveAnIssue: false,
-          issue: "",
-          data: attendees, 
-        })
-      );
+    dispatch(
+      initStudentProfile({
+        requestStatus: "initiated",
+        responseStatus: "recieved",
+        haveAnIssue: false,
+        issue: "",
+        data: attendees,
+      })
+    );
     // }
 
     // if (nonAttendees.length > 0) {
-      dispatch(
-        initUserProfile({
-          requestStatus: "initiated",
-          responseStatus: "recieved",
-          haveAnIssue: false,
-          issue: "",
-          data: nonAttendees, 
-        })
-      );
+    dispatch(
+      initUserProfile({
+        requestStatus: "initiated",
+        responseStatus: "recieved",
+        haveAnIssue: false,
+        issue: "",
+        data: nonAttendees,
+      })
+    );
     // }
 
     dispatch(
@@ -84,26 +92,26 @@ console.log(nonAttendees)
 
 
 export const checkUser = async () => {
-    token = localStorage.getItem("_campaign_token");
-    role = localStorage.getItem("role");
-    dispatch(
-      setUserAuthStatus({
-        isAuthorized: token ? true : false,
-        isRegistered: token ? true : false,
-        role:role,
-      })
-    );
-    if(token){
-      getMember();
-    }
-   
+  token = localStorage.getItem("_campaign_token");
+  role = localStorage.getItem("role");
+  dispatch(
+    setUserAuthStatus({
+      isAuthorized: token ? true : false,
+      isRegistered: token ? true : false,
+      role: role,
+    })
+  );
+  if (token) {
+    getMember();
+  }
+
 };
 
-export const logOut = () =>{
+export const logOut = () => {
   window.location.href = "/login";
-}  
+}
 
-export const  formatDate = (dateString: string, day: boolean): string =>{
+export const formatDate = (dateString: string, day: boolean): string => {
   const options: Intl.DateTimeFormatOptions = day
     ? { year: "numeric", month: "long" }
     : { year: "numeric", month: "long", day: "numeric" };

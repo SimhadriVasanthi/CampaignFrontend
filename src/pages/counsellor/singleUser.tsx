@@ -3,21 +3,27 @@ import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import Images from '../../assets';
 import { visitAdd } from '../../services';
-import { useAppDispatch, useAppSelector } from '../../assets/hooks';
-import { addStudentProfile, updateStudentProfile } from '../../store/slices/studentsInfo';
+import { useAppDispatch} from '../../assets/hooks';
+import { updateStudentProfile } from '../../store/slices/studentsInfo';
 import { closePopup } from '../../store/slices/popupSlice';
-import { setWordCase } from '../../assets/library';
+import { useNavigate } from 'react-router-dom';
 
 const SingleUser = (props: any) => {
     const [loading, setLoading] = useState(false);
-    const students = useAppSelector(store => store.studentInfo)
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const initialValues = {
         visitorId: props.id,
-        details: props?.data?.details.map((detail: any) => ({
-            label: detail.label,
-            data: detail.data || "",
-        })),
+        details: [
+            {
+                label: "eligible",
+                data: props.data?.details?.[0]?.data
+            },
+            {
+                label: "interested",
+                data: props.data?.details?.[1]?.data
+            }
+        ],
         notes: props?.data?.notes || "",
     };
 
@@ -26,14 +32,20 @@ const SingleUser = (props: any) => {
         try {
             const response = await visitAdd(values);
             if (response) {
-                const newParticipant = response.data.data;
-                dispatch(updateStudentProfile(newParticipant));
+                dispatch(
+                    updateStudentProfile({
+                        ...response.data.data.user,         
+                        details: response.data.data.visit.details, 
+                        notes: response.data.data.visit.notes,      
+                    })
+                );
                 setLoading(false)
+                navigate("/")
+                window.location.reload()
             }
         } catch (err) {
-            // console.log(err)
             setLoading(false)
-
+            navigate("/")
         }
         dispatch(closePopup())
     };
@@ -50,16 +62,15 @@ const SingleUser = (props: any) => {
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <FormControl fullWidth variant="outlined" size="small">
-                                        <InputLabel id="eligibility-label">{setWordCase(values.details?.[0]?.label)} *</InputLabel>
+                                        <InputLabel id="eligibility-label">Eligibility *</InputLabel>
                                         <Select
-                                            labelId="eligibility-label"
-                                            label="details[0].label*"
+                                            labelId="eligibility-label"     // ID matches InputLabel
+                                            label="Eligibility"             // Displays "Eligibility" label
                                             name={`details[0].data`}
                                             value={values.details?.[0]?.data}
                                             onChange={(e) => setFieldValue('details[0].data', e.target.value)}
                                             displayEmpty
                                         >
-
                                             {["yes", "no"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
@@ -71,16 +82,15 @@ const SingleUser = (props: any) => {
 
                                 <Grid item xs={12}>
                                     <FormControl fullWidth variant="outlined" size="small">
-                                        <InputLabel id="eligibility-label">{setWordCase(values.details?.[1]?.label)} *</InputLabel>
+                                        <InputLabel id="interested-label">Interested *</InputLabel>
                                         <Select
-                                            labelId="eligibility-label"
-                                            label="details[1].label*"
+                                            labelId="interested-label" 
+                                            label="Interested"          
                                             name={`details[1].data`}
                                             value={values.details?.[1]?.data}
                                             onChange={(e) => setFieldValue('details[1].data', e.target.value)}
                                             displayEmpty
                                         >
-
                                             {["yes", "no"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
@@ -89,6 +99,7 @@ const SingleUser = (props: any) => {
                                         </Select>
                                     </FormControl>
                                 </Grid>
+
 
                                 <Grid item xs={12}>
                                     <TextField
