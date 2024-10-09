@@ -27,12 +27,7 @@ const SingleUser = (props: any) => {
             const response = await visitAdd(values);
             if (response) {
                 const newParticipant = response.data.data;
-                const existingParticipant = students?.data?.find((student) => student._id === newParticipant._id);
-                if (existingParticipant) {
-                    dispatch(updateStudentProfile(newParticipant));
-                } else {
-                    dispatch(addStudentProfile(newParticipant))
-                }
+                dispatch(updateStudentProfile(newParticipant));
                 setLoading(false)
             }
         } catch (err) {
@@ -75,7 +70,7 @@ const SingleUser = (props: any) => {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                <FormControl fullWidth variant="outlined" size="small">
+                                    <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="eligibility-label">{setWordCase(values.details?.[1]?.label)} *</InputLabel>
                                         <Select
                                             labelId="eligibility-label"
