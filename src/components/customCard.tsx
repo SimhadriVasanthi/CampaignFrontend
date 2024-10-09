@@ -1,9 +1,9 @@
-import { Card, Typography, Box } from "@mui/material";
+import { Card,Box } from "@mui/material";
 // import { customCardProps } from "../types/types";
 
 export default function CustomCard({ children, title, disabled, i }: any) {
   const borderColors = ["#D1D3F9", "#75ECE5", "#FFA89C", "#FAEAD0"];
-  const bgColors = ["#F4F4FF", "#B0FEFA", "#FFD8D3", "#FFF7E9"];
+  // const bgColors = ["#F4F4FF", "#B0FEFA", "#FFD8D3", "#FFF7E9"];
 
   return (
     <Box sx={{ position: "relative", mb: 2 ,width:"96%"}}>

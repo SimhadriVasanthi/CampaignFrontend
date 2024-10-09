@@ -1,7 +1,7 @@
 import Error from "../components/layout/error";
 import CreateUser from "../pages/counsellor/createUser";
 import Index from "../pages/counsellor/participant";
-import SingleUser from "../pages/counsellor/singleUser";
+// import SingleUser from "../pages/counsellor/singleUser";
 
 export const COMPONENTS = [
     {name:"error",component:Error},
