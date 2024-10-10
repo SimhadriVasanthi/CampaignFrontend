@@ -1,10 +1,9 @@
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Form, Formik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Images from '../../assets';
 import { visitAdd } from '../../services';
 import { useAppDispatch } from '../../assets/hooks';
-import { updateStudentProfile } from '../../store/slices/studentsInfo';
 import { closePopup } from '../../store/slices/popupSlice';
 import { useNavigate } from 'react-router-dom';
 import { setWordCase } from '../../assets/library';
@@ -14,28 +13,21 @@ const SingleUser = (props: any) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const userType = localStorage.getItem("userType")
-    const details = userType !== "Organizer" ? ["eligible","interested"] :["interested","prospective"]
+    const details = userType !== "Organizer" ? ["eligible", "interested"] : ["interested", "prospective"]
     const initialValues = {
         visitorId: props.id,
         details: {
-          [details[0]]: props?.data?.details?.[details[0]] || "", 
-          [details[1]]: props?.data?.details?.[details[1]] || "", 
+            [details[0]]: props?.data?.details?.[details[0]] || "",
+            [details[1]]: props?.data?.details?.[details[1]] || "",
         },
         notes: props?.data?.notes || "",
-      };
+    };
 
     const submit = async (values: any) => {
         setLoading(true)
         try {
             const response = await visitAdd(values);
             if (response) {
-                dispatch(
-                    updateStudentProfile({
-                        ...response.data.data.user,
-                        details: response.data.data.visit.details,
-                        notes: response.data.data.visit.notes,
-                    })
-                );
                 setLoading(false)
                 navigate("/")
                 window.location.reload()
@@ -46,6 +38,12 @@ const SingleUser = (props: any) => {
         }
         dispatch(closePopup())
     };
+    useEffect(() => {
+        if (props.id) {
+            visitAdd(initialValues)
+        }
+         // eslint-disable-next-line
+    }, [])
 
     return (
         <div>
@@ -61,14 +59,14 @@ const SingleUser = (props: any) => {
                                     <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="eligibility-label">{setWordCase(details[0])}*</InputLabel>
                                         <Select
-                                            label={details[0]}            
+                                            label={details[0]}
                                             name={`details.${details[0]}`}
                                             value={values?.details?.[details[0]]}
                                             onChange={(e) => setFieldValue(`details.${details[0]}`, e.target.value)}
-                                            // displayEmpty
-                                            // defaultValue=''
+                                        // displayEmpty
+                                        // defaultValue=''
                                         >
-                                            {["Yes", "No","May be"].map((value) => (
+                                            {["Yes", "No", "May be"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
                                                 </MenuItem>
@@ -86,9 +84,9 @@ const SingleUser = (props: any) => {
                                             name={`details.${details[1]}`}
                                             value={values?.details?.[details[1]]}
                                             onChange={(e) => setFieldValue(`details.${details[1]}`, e.target.value)}
-                                            // displayEmpty
+                                        // displayEmpty
                                         >
-                                            {["Yes", "No","May be"].map((value) => (
+                                            {["Yes", "No", "May be"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
                                                 </MenuItem>

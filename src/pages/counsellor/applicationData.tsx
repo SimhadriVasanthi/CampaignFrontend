@@ -136,9 +136,9 @@ export const ParticipantCard = (props: any) => {
             fontSize:"0.8rem !important" 
           }
             }}>
-              <Typography>{participant?.institutionName}</Typography> 
-              <Typography>{participant?.role}</Typography>
-              <Typography>{participant?.boothNumber}</Typography>
+             {participant?.institutionName && <Typography>{participant?.institutionName}</Typography> } 
+             {participant?.role && <Typography>{participant?.role}</Typography> }
+             {participant?.boothNumber && <Typography>{participant?.boothNumber}</Typography> }
             </Box>
           <Typography variant="body2" color="textSecondary">
 
@@ -157,7 +157,7 @@ export const ParticipantCard = (props: any) => {
           </Typography>
           <Typography color="textSecondary">{participant?.city}</Typography>
           <Box sx={{ display: "flex", flexDirection: "column", fontSize: "0.8rem", gap: "0.25rem" }}>
-            <Typography sx={{ fontSize: "0.9rem", }}>Degree details :</Typography>
+            <Typography sx={{ fontSize: "0.9rem", }}>Education Details :</Typography>
             <Box sx={{color:"rgba(0, 0, 0, 0.6)"}}>
               {participant?.degree},
               {participant?.college},

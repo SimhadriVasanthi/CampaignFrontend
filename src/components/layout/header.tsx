@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Menu,
-  MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -76,12 +75,6 @@ const Header = (props: FilterProps) => {
                   <Typography sx={{ color: "#000", fontWeight: "600", cursor: "pointer" }} onClick={handleClick}>
                     {profile?.data?.name}
                   </Typography>
-                  {/* <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
-                   {profile?.data?.institutionName} 
-                </Typography>
-                <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
-                   {profile?.data?.role} 
-                </Typography> */}
                 </Box>
                 <Menu
                   anchorEl={anchorEl}
@@ -135,7 +128,7 @@ const Header = (props: FilterProps) => {
                     textTransform: "none",
                     color: "#fff",
                     borderRadius: "15px",
-                    padding: "3px",
+                    padding: "3px 10px",
                   }]}
                   onClick={() => {
                     localStorage.clear();

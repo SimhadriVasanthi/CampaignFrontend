@@ -21,6 +21,7 @@ const CreateUser = () => {
     const submit = async (values: any) => {
         setLoading(true)
         try {
+             // eslint-disable-next-line
             const response = await registerUser(values)
             setLoading(false)
             window.location.reload()

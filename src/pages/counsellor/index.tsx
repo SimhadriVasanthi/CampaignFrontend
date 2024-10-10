@@ -75,7 +75,7 @@ const Counsellor = () => {
         }}
       >
         <Box
-          sx={{ display: "flex", justifyContent: "space-between", gap: "15px",alignItems:"center",width:"100%" }}
+          sx={{ display: "flex", justifyContent: "space-between", gap: "15px", alignItems: "center", width: "100%" }}
         >
           <Button
             onClick={() => setActiveTab("students")}
@@ -87,10 +87,10 @@ const Counsellor = () => {
               fontSize: "1rem",
             }}
           >
-            Participants
+            Attendees
           </Button>
         </Box>
-        <Index/>
+        <Index />
 
       </Box>
       <Filters filterData={filterData} setFilterData={setFilterData} />
@@ -199,13 +199,17 @@ const MainComponent: React.FC<MainComponentProps> = ({
             </Box>),
           aptitude: (<>
             {participant?.aptitude}<br />
-            {participant.gre ? <Typography sx={{ fontSize: "0.85rem", }}>Gre: <b style={{ fontWeight: "500" }}>{participant.gre}</b></Typography> : ""}
-            {participant.gmat ? <Typography sx={{ fontSize: "0.85rem", }}>Gmat: <b style={{ fontWeight: "500" }}>{participant.gmat}</b></Typography> : ""}
+            {participant.gre ? <Typography sx={{ fontSize: "0.85rem", }}>GRE: <b style={{ fontWeight: "500" }}>{participant.gre}</b></Typography> : ""}
+            {participant.gmat ? <Typography sx={{ fontSize: "0.85rem", }}>GMAT: <b style={{ fontWeight: "500" }}>{participant.gmat}</b></Typography> : ""}
             {participant.act ? <Typography sx={{ fontSize: "0.85rem", }}>ACT: <b style={{ fontWeight: "500" }}>{participant.act}</b></Typography> : ""}
             {participant.sat ? <Typography sx={{ fontSize: "0.85rem", }}>SAT: <b style={{ fontWeight: "500" }}>{participant.sat}</b></Typography> : ""}
           </>),
           language: (<>
             {participant?.language}<br />
+            {participant?.toefl ? <Typography sx={{ fontSize: "0.85rem", }}>TOEFL: <b style={{ fontWeight: "500" }}>{participant?.toefl}</b></Typography> : ""}
+            {participant?.ielts ? <Typography sx={{ fontSize: "0.85rem", }}>IELTS: <b>{participant?.ielts}</b></Typography> : ""}
+            {participant?.pte ? <Typography sx={{ fontSize: "0.85rem", }}>PTE: <b style={{ fontWeight: "500" }}>{participant?.pte}</b></Typography> : ""}
+            {participant?.duolingo ? <Typography sx={{ fontSize: "0.85rem", }}>Duolingo: <b style={{ fontWeight: "500" }}>{participant?.duolingo}</b></Typography> : ""}
           </>),
         }
       )
@@ -214,7 +218,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const studentcolumns = [
     { key: "name", name: "Name", minWidth: 120 },
     { key: "city", name: "City", minWidth: 120 },
-    { key: "degree", name: "Recent Degree", minWidth: 120 },
+    { key: "degree", name: "Education Details", minWidth: 120 },
     { key: "country", name: "Preferred Country", minWidth: 120 },
     { key: "course", name: "Preferences ", minWidth: 120 },
     { key: "aptitude", name: "Aptitude", minWidth: 120 },
@@ -253,7 +257,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
       <Box sx={{ display: { xs: "none", lg: "block" } }}>
         <ReusableTable1 columns={studentcolumns} data={mapStudentData(students)} />
       </Box>
-      <Box sx={{ display: { xs: "block", lg: "none" },padding:"1rem" }}>
+      <Box sx={{ display: { xs: "block", lg: "none" }, padding: "1rem" }}>
         <Grid container>
           {students?.map((item: any, i: number) => (
             <Grid item xs={12} md={6} key={i}>
@@ -366,7 +370,7 @@ const Filters = (props: any) => {
                   endAdornment: (
                     <InputAdornment position="end">
                       <Button
-                        sx={{ textTransform: "none", background: "#3b3f76", minWidth: "0",p:1 }}
+                        sx={{ textTransform: "none", background: "#3b3f76", minWidth: "0", p: 1 }}
                         onClick={handleSearchClick}
                       >
                         <SearchIcon sx={{ color: "#fff" }} />
@@ -380,15 +384,17 @@ const Filters = (props: any) => {
           {details.map((detailKey) => (
             <Grid item xs={4} sm={3} md={2} lg={1.5}>
               <Box key={detailKey} >
-                <FormControl fullWidth variant="outlined" size="small" sx={{"& .MuiFormLabel-root ":{
-                  zIndex:0
-                }}}>
+                <FormControl fullWidth variant="outlined" size="small" sx={{
+                  "& .MuiFormLabel-root ": {
+                    zIndex: 0
+                  }
+                }}>
                   <InputLabel id={`${detailKey}-label`}>{setWordCase(detailKey)}*</InputLabel>
                   <Select
                     label={setWordCase(detailKey)}
                     value={selectedValues[detailKey] || ""}
                   >
-                    {["Yes", "No","May be"].map((value) => (
+                    {["Yes", "No", "May be"].map((value) => (
                       <MenuItem
                         key={value}
                         value={value}

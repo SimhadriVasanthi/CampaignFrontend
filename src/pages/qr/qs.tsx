@@ -44,6 +44,7 @@ const Html5QrcodePlugin: React.FC<Html5QrcodePluginProps> = (props) => {
                 console.error("Failed to clear html5QrcodeScanner.", error);
             });
         };
+         // eslint-disable-next-line
     }, []);
 
     return (
