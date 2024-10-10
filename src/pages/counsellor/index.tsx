@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography, } from "@mui/material";
+import { Box, Button, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography, } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../assets/hooks";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -23,7 +23,7 @@ const Counsellor = () => {
 
   const auth = localStorage.getItem("_campaign_token")
   // const role = localStorage.getItem("role");
-  const [filterData,setFilterData] = useState([])
+  const [filterData, setFilterData] = useState([])
   const [participants, setParticipants] = useState([])
   const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<
@@ -33,7 +33,7 @@ const Counsellor = () => {
   const getMember = async () => {
     try {
       const response = await getParticipantDetails("", 1, 20, {
-        filterData: filterData 
+        filterData: filterData
       });
       if (!response || !response.data || !response.data.data) {
         console.error("No valid data in response");
@@ -90,7 +90,7 @@ const Counsellor = () => {
           </Button>
         </Box>
       </Box>
-      <Filters filterData={filterData} setFilterData={setFilterData}/>
+      <Filters filterData={filterData} setFilterData={setFilterData} />
       <MainComponent
         activeTab={activeTab}
         students={participants}
@@ -274,97 +274,139 @@ interface FiltersProps {
   setFilterData: (filters: any) => void;
 }
 
-const Filters: React.FC<FiltersProps> = (props) => {
-  const [search, setSearch] = useState<string>("");
+
+const Filters = (props: any) => {
+  const [search, setSearch] = useState("");
   const userType = localStorage.getItem("userType");
   const details = userType !== "Organizer" ? ["eligible", "interested"] : ["interested", "prospective"];
 
-  const handleSelectChange = (label: string, value: string): void => {
-    const existingFilters = [...props.filterData];
-    const existingFilterIndex = existingFilters.findIndex(
-      (filter) => filter.type === "label" && filter.label === label
-    );
+  const [selectedValues, setSelectedValues] = useState<{ [key: string]: string | null }>({});
 
-    if (existingFilterIndex > -1) {
-      if (existingFilters[existingFilterIndex].data[0] === value) {
-        const updatedFilters = existingFilters.filter(
-          (_, index) => index !== existingFilterIndex
-        );
-        props.setFilterData(updatedFilters);
-      } else {
-        const updatedFilters = existingFilters.map((filter, index) => {
-          if (index === existingFilterIndex) {
-            return { ...filter, data: [value] }; 
-          }
-          return filter;
-        });
-        props.setFilterData(updatedFilters); 
-      }
-    } else {
-      const formattedData: FilterData = {
+  const handleSelectChange = (label: string, value: string) => {
+    const currentFilterData = props.filterData.find(
+      (filter: any) => filter.type === "label" && filter.label === label
+    );
+    if (!currentFilterData) {
+      const newFilter = {
         type: "label",
         label: label,
         data: [value],
       };
-      props.setFilterData([...existingFilters, formattedData]);
+      props.setFilterData([...props.filterData, newFilter]);
+      setSelectedValues({ ...selectedValues, [label]: value });
+    } else {
+      if (currentFilterData.data[0] === value) {
+        const updatedFilters = props.filterData.filter(
+          (filter: any) => filter !== currentFilterData
+        );
+        props.setFilterData(updatedFilters);
+        setSelectedValues({ ...selectedValues, [label]: null });
+      } else {
+        const updatedFilters = props.filterData.map((filter: any) => {
+          if (filter === currentFilterData) {
+            return { ...filter, data: [value] };
+          }
+          return filter;
+        });
+        props.setFilterData(updatedFilters);
+        setSelectedValues({ ...selectedValues, [label]: value });
+      }
     }
   };
 
-  const handleSearchClick = (): void => {
-    const searchFormattedData: FilterData = {
+  const handleSearchClick = () => {
+    const searchFormattedData = {
       type: "name",
       data: [search],
     };
-    props.setFilterData([...props.filterData, searchFormattedData]);
+    const existingNameFilterIndex = props.filterData.findIndex(
+      (filter: any) => filter.type === "name"
+    );
+
+    if (existingNameFilterIndex > -1) {
+      const updatedFilterData = props.filterData.map((filter: any, index: any) => {
+        if (index === existingNameFilterIndex) {
+          return searchFormattedData;
+        }
+        return filter;
+      });
+      props.setFilterData(updatedFilterData);
+    } else {
+      props.setFilterData([...props.filterData, searchFormattedData]);
+    }
   };
+
 
   return (
     <div style={{ marginLeft: "1rem" }}>
       <Typography sx={{ mt: 1 }}>Filters</Typography>
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ display: "flex", gap: "0.5rem" }}>
-          <TextField
-            variant="outlined"
-            size="small"
-            value={search}
-            placeholder="Search name"
-            onChange={(e) => setSearch(e.target.value)}
-            sx={{
-              "& .MuiOutlinedInput-input": {
-                padding: "6px",
-              },
-            }}
-          />
-          <Button
-            sx={{ textTransform: "none", background: "#3b3f76", width: "35px", minWidth: "0" }}
-            onClick={handleSearchClick} // Handle search button click
-          >
-            <SearchIcon sx={{ color: "#fff" }} />
-          </Button>
-        </Box>
-        <Box sx={{ display: "flex", gap: "0.5rem" }}>
-          {details.map((detailKey) => (
-            <Box key={detailKey} sx={{ ml: 2 }}>
-              <FormControl fullWidth variant="outlined" size="small" sx={{ width: "130px" }}>
-                <InputLabel id={`${detailKey}-label`}>{setWordCase(detailKey)}</InputLabel>
-                <Select
-                  label={setWordCase(detailKey)}
-                  name={`details.${detailKey}`}
-                  onChange={(e:any) => handleSelectChange(detailKey, e.target.value)} // Handle onChange with the formatted data
-                >
-                  {["yes", "no"].map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4} md={4} lg={3}>
+            <Box sx={{ display: "flex", gap: "0.5rem" }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={search}
+                placeholder="Search name"
+                onChange={(e) => setSearch(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-input": {
+                    // padding: "6px",
+                  },
+                  "& .MuiOutlinedInput-root ": {
+                    paddingRight: 0
+                  }
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button
+                        sx={{ textTransform: "none", background: "#3b3f76", minWidth: "0",p:1 }}
+                        onClick={handleSearchClick}
+                      >
+                        <SearchIcon sx={{ color: "#fff" }} />
+                      </Button>
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </Box>
+          </Grid>
+          {details.map((detailKey) => (
+            <Grid item xs={4} sm={3} md={2} lg={1.5}>
+              <Box key={detailKey} >
+                <FormControl fullWidth variant="outlined" size="small" sx={{}}>
+                  <InputLabel id={`${detailKey}-label`}>{setWordCase(detailKey)}*</InputLabel>
+                  <Select
+                    label={setWordCase(detailKey)}
+                    value={selectedValues[detailKey] || ""}
+                  >
+                    {["yes", "no"].map((value) => (
+                      <MenuItem
+                        key={value}
+                        value={value}
+                        onClick={() => handleSelectChange(detailKey, value)}
+                      >
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+
           ))}
-        </Box>
+
+        </Grid>
+
+
       </Box>
     </div>
   );
 };
+
+
 
 

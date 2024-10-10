@@ -154,10 +154,10 @@ export const ParticipantCard = (props: any) => {
               </Box>}
 
           </Typography>
-          <Typography>{participant?.city}</Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", fontSize: "0.8rem", alignItems: "center", gap: "0.5rem" }}>
-            <Typography sx={{ fontSize: "0.9rem" }}>Degree : </Typography>
-            <Box sx={{}}>
+          <Typography color="textSecondary">{participant?.city}</Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", fontSize: "0.8rem", gap: "0.25rem" }}>
+            <Typography sx={{ fontSize: "0.9rem", }}>Degree details :</Typography>
+            <Box sx={{color:"rgba(0, 0, 0, 0.6)"}}>
               {participant?.degree},
               {participant?.college},
               {participant?.gradepercentage},

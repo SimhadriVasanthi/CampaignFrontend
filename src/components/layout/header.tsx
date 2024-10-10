@@ -18,7 +18,6 @@ const Header = (props: FilterProps) => {
   const navigate = useNavigate();
   const profile = useAppSelector((state:any) => state.profileInfo);
   // eslint-disable-next-line
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   return (
     <>
       {location.pathname === "/login" ? null : (
@@ -59,10 +58,10 @@ const Header = (props: FilterProps) => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   height: "50px",
-                  gap: "20px",
+                  gap: "8px",
+                  flexDirection:{xs:"row",lg:"column"}
                 }}
               >
-                <Box>
                 <Typography sx={{ color: "#000", fontWeight: "600" }}>
                    {profile?.data?.name} 
                 </Typography>
@@ -72,16 +71,15 @@ const Header = (props: FilterProps) => {
                 <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
                    {profile?.data?.role} 
                 </Typography>
-                </Box>
               </Box>
               <Button
                 sx={[{
-                  width: "100px",
+                  // width: "100px",
                   background: "#3b3f76",
                   textTransform: "none",
                   color: "#fff",
                   borderRadius: "15px",
-                  padding: 0,
+                  padding: "3px",
                 }]}
                 onClick={() => {
                   localStorage.clear();
