@@ -62,22 +62,15 @@ const Header = (props: FilterProps) => {
                   gap: "20px",
                 }}
               >
-                <img
-                  className="user-info img"
-                  style={{
-                    borderRadius: "50%",
-                    height: "50px",
-                    width: "50px",
-                  }}
-                  src={profile.data?.displayPicSrc ? profile?.data?.displayPicSrc : "https://res.cloudinary.com/dffdp7skh/image/upload/v1706879929/nvitahnrlhvmtcizpthx.png"}
-                  alt="User Profile"
-                />
                 <Box>
                 <Typography sx={{ color: "#000", fontWeight: "600" }}>
                    {profile?.data?.name} 
                 </Typography>
-                <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:500}}>
+                <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
                    {profile?.data?.institutionName} 
+                </Typography>
+                <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
+                   {profile?.data?.role} 
                 </Typography>
                 </Box>
               </Box>

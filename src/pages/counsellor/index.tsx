@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Box, Button, Grid, } from "@mui/material";
+import { Box, Button, Grid, Typography, } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../assets/hooks";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -17,25 +17,48 @@ import { useLocation } from "react-router-dom";
 import { getParticipantDetails } from "../../services";
 import { setWordCase } from "../../assets/library";
 import { AnyAaaaRecord } from "dns";
+import { initProfile } from "../../store/slices/profileInfo";
 
 const Counsellor = () => {
-  const studentsData = useAppSelector((state) => state.studentInfo);
-  const usersData = useAppSelector((state) => state.userInfo);
+
   const auth = localStorage.getItem("_campaign_token")
-  // console.log(usersData)
-  const role = localStorage.getItem("role")
+  const role = localStorage.getItem("role");
+  const [participants, setParticipants] = useState([])
   const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<
-    "students" | "users"
-  >("users");
+    "students"
+  >("students");
+
+  const getMember = async () => {
+    try {
+      const response = await getParticipantDetails("", 1, 20, {
+        filterData: []
+      });
+      if (!response || !response.data || !response.data.data) {
+        console.error("No valid data in response");
+        return;
+      }
+      localStorage.setItem("memberId", response.data.data._id);
+      setParticipants(response.data.data.visits)
+      dispatch(
+        initProfile({
+          requestStatus: "initiated",
+          responseStatus: "recieved",
+          haveAnIssue: false,
+          issue: "",
+          data: response.data.data,
+        })
+      );
+    } catch (err) {
+      console.error("Error fetching participant details:", err);
+    }
+  };
 
   useEffect(() => {
-    if (role === "Admin") {
-      setActiveTab("users");
-    } else {
-      setActiveTab("students");
+    if (auth) {
+      getMember()
     }
-  }, [role]);
+  }, [])
 
 
   return (
@@ -52,57 +75,25 @@ const Counsellor = () => {
         <Box
           sx={{ display: "flex", justifyContent: "space-between", gap: "15px" }}
         >
-          {role === "Admin" ?
-            <>
-              <Button
-                onClick={() => setActiveTab("users")}
-                sx={{
-                  color: "#fff",
-                  borderBottom: activeTab === "users" ? "2px solid #fff" : 0,
-                  borderRadius: 0,
-                  textTransform: "none",
-                  fontSize: "1rem",
-                }}
-              >
-                Users
-              </Button>
-              <Button
-                onClick={() => setActiveTab("students")}
-                sx={{
-                  color: "#fff",
-                  borderBottom: activeTab === "students" ? "2px solid #fff" : 0,
-                  borderRadius: 0,
-                  textTransform: "none",
-                  fontSize: "1rem",
-                }}
-              >
-                Participants
-              </Button>
-            </>
-            :
-            <>
-
-              <Button
-                onClick={() => setActiveTab("students")}
-                sx={{
-                  color: "#fff",
-                  borderBottom: activeTab === "students" ? "2px solid #fff" : 0,
-                  borderRadius: 0,
-                  textTransform: "none",
-                  fontSize: "1rem",
-                }}
-              >
-                Participants
-              </Button>
-            </>
-          }
-
+          <Button
+            onClick={() => setActiveTab("students")}
+            sx={{
+              color: "#fff",
+              borderBottom: activeTab === "students" ? "2px solid #fff" : 0,
+              borderRadius: 0,
+              textTransform: "none",
+              fontSize: "1rem",
+            }}
+          >
+            Participants
+          </Button>
         </Box>
       </Box>
+      <Filters/>
       <MainComponent
         activeTab={activeTab}
-        students={studentsData}
-        users={usersData?.data}
+        students={participants}
+      // users={usersData?.data}
       />
     </Box>
   );
@@ -113,37 +104,18 @@ export default Counsellor;
 interface MainComponentProps {
   activeTab: string;
   students: any;
-  users: any;
-}
-function formatDate(dateString: string, day: boolean): string {
-  const options: Intl.DateTimeFormatOptions = day
-    ? { year: "numeric", month: "long" }
-    : { year: "numeric", month: "long", day: "numeric" };
-  return new Date(dateString).toLocaleDateString(undefined, options);
 }
 const MainComponent: React.FC<MainComponentProps> = ({
   activeTab,
   students,
-  users,
 }) => {
-  const [columns, setColumns] = useState<any[]>([]);
-console.log(students)
 
   const dispatch = useAppDispatch()
-  useEffect(() => {
-    if (activeTab === "students") {
-      setColumns(studentcolumns);
-    } else {
-      setColumns(usercolumns);
-
-    }
-    // eslint-disable-next-line
-  }, [activeTab]);
-
+  const role = localStorage.getItem("role")
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  let stdId = queryParams.get("s");
-  let popup = queryParams.get("p");
+  let stdId = queryParams.get("s") || "";
+  let popup = queryParams.get("p") || "";
 
   React.useEffect(() => {
     if (popup && stdId !== null) {
@@ -164,11 +136,14 @@ console.log(students)
     }
     // eslint-disable-next-line
   }, [])
-
   const mapStudentData = (events: any) => {
-    // const memberId = localStorage.getItem("memberId");
-    const role = localStorage.getItem("role")
-    return events?.data?.map((participant: any) =>  (
+    const memberId = localStorage.getItem("memberId");
+    return events?.map((event: any) => {
+      const filteredParticipants = event.participants.filter(
+        (participant: any) => participant._id !== memberId
+      );
+      const participant = filteredParticipants[0];
+      return (
         {
           name: (
             <>
@@ -178,21 +153,17 @@ console.log(students)
                 id={participant?._id}
                 type={participant?.userType}
               />
-              {
-                role === "Admin" ? "" :
-                  <Box sx={{ marginLeft: "3.5rem" }}>
-
-                    {
-                      participant?.details?.map((visit: any) => (
-                        <>
-                          {setWordCase(visit?.label)} : {visit?.data} <br />
-                        </>
-                      ))
-                    }
-
-                  </Box>
-              }
-
+              { role === "Admin" ? "" : 
+              <Box sx={{ }}>
+                {
+                 event?.details &&  Object.entries(event?.details).map(([key, value]: [string, any]) => (
+                    <div key={key}>
+                      {setWordCase(key)}: {value}
+                      <br />
+                    </div>
+                  ))
+                }
+              </Box> }
             </>
           ),
           city: participant?.city,
@@ -200,7 +171,6 @@ console.log(students)
             {participant?.degree}<br />
             {participant?.college}<br />
             {participant?.gradepercentage}<br />
-
             {participant?.graduation}
           </Box>),
           country: (
@@ -212,107 +182,90 @@ console.log(students)
                 : "N/A"}
             </ul>
           ),
-          course: participant?.course,
-          budget: participant?.educationBudget,
-          intake: participant?.year,
-
+          course:
+            (<Box sx={{ display: "flex", flexDirection: "column" }}>
+              {participant?.course}<br />
+              {participant?.educationBudget}<br />
+              {participant?.year}<br />
+            </Box>),
+          delegate:
+            (<Box sx={{ display: "flex", flexDirection: "column" }}>
+              {participant?.institutionName}<br />
+              {participant?.role}<br />
+              {participant?.boothNumber}<br />
+            </Box>),
           aptitude: (<>
             {participant?.aptitude}<br />
+            {participant.gre ? <Typography sx={{ fontSize: "0.85rem", }}>Gre: <b style={{fontWeight:"500"}}>{ participant.gre }</b></Typography>:""}
+            { participant.gmat ? <Typography sx={{ fontSize: "0.85rem", }}>Gmat: <b style={{fontWeight:"500"}}>{ participant.gmat }</b></Typography> :""}
+        {participant.act ? <Typography sx={{ fontSize: "0.85rem", }}>ACT: <b style={{fontWeight:"500"}}>{participant.act}</b></Typography> :""}
+        {participant.sat ?  <Typography sx={{ fontSize: "0.85rem", }}>SAT: <b style={{fontWeight:"500"}}>{participant.sat}</b></Typography> :""}
           </>),
           language: (<>
             {participant?.language}<br />
           </>),
-
         }
-    )
-    );
+      )
+    });
   };
-
   const studentcolumns = [
     { key: "name", name: "Name", minWidth: 120 },
+    { key: "delegate", name: "Delegate", minWidth: 120 },
     { key: "city", name: "City", minWidth: 120 },
     { key: "degree", name: "Recent Degree", minWidth: 120 },
-    { key: "intake", name: "Plan to start", minWidth: 120 },
     { key: "country", name: "Preferred Country", minWidth: 120 },
-    { key: "course", name: "Preferred Course", minWidth: 120 },
-    { key: "budget", name: "Budget range", minWidth: 120 },
+    { key: "course", name: "Preferences ", minWidth: 120 },
     { key: "aptitude", name: "Aptitude", minWidth: 120 },
     { key: "language", name: "Language", minWidth: 120 },
 
   ];
 
-  const usercolumns = [
-    { key: "name", name: "Name", minWidth: 200 },
-    { key: "boothNumber", name: "Booth Number", minWidth: 200 },
-    { key: "institutionName", name: "Institution Name", minWidth: 200 },
-    { key: "role", name: "Role", minWidth: 200 },
-  ];
-  const mapLeadsData = (leadsData: any) => {
-    return leadsData.map((student:any) => ({
-      name: student?.name,
-      boothNumber: student?.boothNumber,
-      institutionName: student?.institutionName,
-      role: student?.role || "N/A",
-    }));
-  };
-
   return (
     <div className="main-content" style={{ marginTop: "1rem" }}>
-      {activeTab === "students" ? (
-        <>
-          <Box sx={{ display: { xs: "none", lg: "block" } }}>
-            <ReusableTable1 columns={studentcolumns} data={mapStudentData(students)} />
-          </Box>
-          <Box sx={{ display: { xs: "block", lg: "none" } }}>
-            <Grid container>
-              {students?.data?.map((item: any, i: number) => (
-                <Grid item xs={12} md={6} key={i}>
-                  <ParticipantCard data={item} key={i} />
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </>
-      ) :
-        <>
-          <Button sx={{
-            color: "#fff",
+      {role === "Admin" ?
+        <Button sx={{
+          color: "#fff",
+          background: "#3B3F76",
+          borderRadius: "5px",
+          textTransform: "none",
+          fontSize: "0.8rem",
+          margin: '10px',
+          "&:hover": {
             background: "#3B3F76",
-            borderRadius: "5px",
-            textTransform: "none",
-            fontSize: "0.8rem",
-            margin: '10px',
-            "&:hover": {
-              background: "#3B3F76",
-            },
-          }} onClick={() => dispatch(
-            setPopup({
-              show: true,
-              data: {
-                container: {
-                  name: "createUser",
-                  dimensions: {
-                    width: "500px",
-                  },
+          },
+        }} onClick={() => dispatch(
+          setPopup({
+            show: true,
+            data: {
+              container: {
+                name: "createUser",
+                dimensions: {
+                  width: "500px",
                 },
-                type: "custom",
               },
-            }))}>Create user</Button>
-          <Box sx={{ display: { xs: "none", lg: "block" } }}>
-            <ReusableTable1 columns={usercolumns} data={mapLeadsData(users)} />
-          </Box>
-          <Box sx={{ display: { xs: "block", lg: "none" } }}>
-            <Grid container>
-              {users?.map((item: any, i: number) => (
-                <Grid item xs={12} sm={6} key={i}>
-                  <UserCard data={item} key={i} />
-                </Grid>
-              ))}
+              type: "custom",
+            },
+          }))}>Create user</Button> : ""}
+      <Box sx={{ display: { xs: "none", lg: "block" } }}>
+        <ReusableTable1 columns={studentcolumns} data={mapStudentData(students)} />
+      </Box>
+      <Box sx={{ display: { xs: "block", lg: "none" } }}>
+        <Grid container>
+          {students?.map((item: any, i: number) => (
+            <Grid item xs={12} md={6} key={i}>
+              <ParticipantCard data={item} key={i} />
             </Grid>
-          </Box>
-        </>
-      }
-
+          ))}
+        </Grid>
+      </Box>
     </div>
   );
 };
+
+const Filters = () =>{
+  return (
+    <div>
+      <Typography sx={{mt:1}}>Filters</Typography>
+    </div>
+  )
+}

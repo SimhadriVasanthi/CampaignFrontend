@@ -4,7 +4,9 @@ import {
   Grid,
   TextField,
   IconButton,
-  InputAdornment
+  InputAdornment,
+  Typography,
+  Checkbox
 } from "@mui/material";
 import { ErrorMessage, Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -19,11 +21,12 @@ import { checkUser } from "../../assets/library";
 const LoginComp = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
 
   const initValues = {
     email: "",
-    password: ""
+    password: "",
+    privacyPolicy: false, 
   };
 
   const loginSchema = Yup.object().shape({
@@ -33,7 +36,8 @@ const LoginComp = () => {
       .max(40, "Email must be at most 40 characters"),
     password: Yup.string()
       .required("Password is required")
-      .min(8, "Password must be at least 8 characters")
+      .min(8, "Password must be at least 8 characters"),
+    privacyPolicy: Yup.bool().oneOf([true], "You must agree to the Privacy Policy"), // Checkbox validation
   });
 
   const onSubmitForm = async (values: any) => {
@@ -44,9 +48,9 @@ const LoginComp = () => {
         localStorage.setItem("role", response.data.data.role);
         localStorage.setItem("userType", response.data.data.userType);
         localStorage.setItem("_campaign_token", response.data.data.AccessToken);
-        checkUser()
-        navigate("/");
-        window.location.reload()
+        checkUser();
+        navigate(`/?s=${localStorage.getItem("tempId") || ""}&p=${localStorage.getItem("tempP") || ""}`);
+        window.location.reload();
       }
     } catch (err) {
       setLoading(false);
@@ -57,22 +61,22 @@ const LoginComp = () => {
     <Box sx={{ height: "100%" }}>
       <Grid container sx={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
         <Grid item xs={12} md={6.5} sx={{ padding: "2rem", background: "#d1d3f933", borderRadius: "10px" }}>
-          <Box sx={{  my: 3 }}>
+          <Box sx={{ my: 3 }}>
             <Box sx={{ mb: 1.5, display: "flex", justifyContent: "center" }}>
               <Box component="img" src={Images.campusrootLogo} alt="logo" sx={{ width: { xs: "120px", md: "180px" } }} />
             </Box>
 
             <Grid container>
-              <Grid item xs={12}  sx={{ height: "250px" }}>
-                <Box sx={{ textAlign: 'center', padding: 3 }}>
+              <Grid item xs={12} sx={{ height: "250px" }}>
+                <Box sx={{ textAlign: "center", padding: 3 }}>
                   <Formik
                     initialValues={initValues}
                     validationSchema={loginSchema}
                     onSubmit={onSubmitForm}
                     enableReinitialize={true}
                   >
-                    {({ errors, touched, values, handleChange }) => (
-                      <Form>
+                    {({ errors, touched, values, handleChange, handleSubmit, setFieldValue }) => (
+                      <Form onSubmit={handleSubmit}>
                         <Grid container spacing={1.25}>
                           <Grid item xs={12}>
                             <TextField
@@ -87,7 +91,7 @@ const LoginComp = () => {
                               error={touched.email && Boolean(errors.email)}
                               fullWidth
                             />
-                            <div style={{ color: "#e60c0c", fontSize: "12px",textAlign:"start",marginTop:"10px" }}>
+                            <div style={{ color: "#e60c0c", fontSize: "12px", textAlign: "start", marginTop: "10px" }}>
                               <ErrorMessage name="email" component="div" />
                             </div>
                           </Grid>
@@ -95,7 +99,7 @@ const LoginComp = () => {
                             <TextField
                               id="password"
                               name="password"
-                              type={showPassword ? "text" : "password"} // Toggle type
+                              type={showPassword ? "text" : "password"}
                               size="small"
                               label="Password *"
                               placeholder="Enter password"
@@ -104,35 +108,43 @@ const LoginComp = () => {
                               error={touched.password && Boolean(errors.password)}
                               fullWidth
                               InputProps={{
-                                // Icon inside password field
                                 endAdornment: (
                                   <InputAdornment position="end">
-                                    <IconButton
-                                      onClick={() => setShowPassword(!showPassword)}
-                                      edge="end"
-                                    >
+                                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                                       {!showPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                   </InputAdornment>
                                 ),
                               }}
                             />
-                            <div style={{ color: "#e60c0c", fontSize: "12px",textAlign:"start",marginTop:"10px"  }}>
+                            <div style={{ color: "#e60c0c", fontSize: "12px", textAlign: "start", marginTop: "10px" }}>
                               <ErrorMessage name="password" component="div" />
                             </div>
                           </Grid>
+                          <Grid item xs={12} sx={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+                            <Checkbox
+                              name="privacyPolicy"
+                              checked={values.privacyPolicy}
+                              onChange={(e) => setFieldValue("privacyPolicy", e.target.checked)}
+                            />
+                            <Typography>Privacy Policy</Typography>
+                          </Grid>
+                          <div style={{ color: "#e60c0c", fontSize: "12px", textAlign: "start",marginLeft:"20px" }}>
+                            <ErrorMessage name="privacyPolicy" component="div" />
+                          </div>
                           <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                             <Button
-                              sx={[{
-                                width: "100px",
-                                background: "#3b3f76",
-                                textTransform: "none",
-                                color: "#fff",
-                                borderRadius: "15px",
-                                padding: 0,
-                              }]}
+                              sx={[
+                                {
+                                  width: "100px",
+                                  background: "#3b3f76",
+                                  textTransform: "none",
+                                  color: "#fff",
+                                  borderRadius: "15px",
+                                  // padding: 0,
+                                },
+                              ]}
                               type="submit"
-                              disabled={loading}
                             >
                               {loading ? (
                                 <img
@@ -158,6 +170,7 @@ const LoginComp = () => {
     </Box>
   );
 };
+
 
 const Login = () => {
   return (

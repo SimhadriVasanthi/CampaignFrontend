@@ -11,85 +11,6 @@ const dispatch = store.dispatch;
 let token = localStorage.getItem("_campaign_token");
 let role = localStorage.getItem("role");
 
-const getMember = async () => {
-  try {
-    const response = await getParticipantDetails("");
-    if (!response || !response.data || !response.data.data) {
-      console.error("No valid data in response");
-      return;
-    }
-    localStorage.setItem("memberId", response.data.data._id);
-
-    const attendees: any[] = [];
-    const nonAttendees: any[] = [];
-    response.data.data?.visits?.forEach((event: any) => {
-      const { details, notes, participants } = event; // Extracting details and notes
-
-      participants.forEach((participant: any) => {
-        const combinedData = {
-          ...participant, // Participant data
-          details,        // Details array
-          notes,          // Notes value
-        };
-
-        // Separate participants based on userType and push combined data
-        if (participant.userType === "Attendee") {
-          attendees.push(combinedData);
-        } else {
-          nonAttendees.push(combinedData);
-        }
-      });
-    })
-    // if (attendees.length > 0) {
-    dispatch(
-      initStudentProfile({
-        requestStatus: "initiated",
-        responseStatus: "recieved",
-        haveAnIssue: false,
-        issue: "",
-        data: attendees,
-      })
-    );
-    // }
-
-    // if (nonAttendees.length > 0) {
-    dispatch(
-      initUserProfile({
-        requestStatus: "initiated",
-        responseStatus: "recieved",
-        haveAnIssue: false,
-        issue: "",
-        data: nonAttendees,
-      })
-    );
-    // }
-
-    dispatch(
-      initProfile({
-        requestStatus: "initiated",
-        responseStatus: "recieved",
-        haveAnIssue: false,
-        issue: "",
-        data: response.data.data,
-      })
-    );
-
-    return {
-      _id: response.data._id,
-      name: response.data.name,
-      institutionName: response.data.institutionName,
-      displayPicSrc: response.data.displayPicSrc
-        ? response.data.displayPicSrc
-        : "https://res.cloudinary.com/dffdp7skh/image/upload/v1706879929/nvitahnrlhvmtcizpthx.png", // Default image if not provided
-      email: response.data.email,
-      userType: response.data.userType,
-      role: response.data.role,
-    };
-  } catch (err) {
-    console.error("Error fetching participant details:", err);
-  }
-};
-
 
 export const checkUser = async () => {
   token = localStorage.getItem("_campaign_token");
@@ -101,9 +22,6 @@ export const checkUser = async () => {
       role: role,
     })
   );
-  if (token) {
-    getMember();
-  }
 
 };
 

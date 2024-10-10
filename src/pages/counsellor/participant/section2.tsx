@@ -4,49 +4,42 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const Education = (data: any) => {
-    return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <Typography>Recent degree details</Typography>
-
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "600" }}>{data?.data?.degree}</Typography>
-        <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}> {data?.data?.college}</Typography>
-        <Typography fontWeight="500" sx={{ fontSize: "0.9rem" }}>{data?.data?.graduation}</Typography>
-        <Typography sx={{ fontSize: "0.9rem" }}>{data?.data?.gradepercentage}</Typography>
-
-    </div>;
+    return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center",marginLeft:"1rem" }}>
+        <Typography fontWeight="500">Degree details</Typography>
+        <Typography sx={{ fontSize: "0.9rem"}}>Degree : <b style={{fontWeight:"500"}}>{data?.data?.degree}</b></Typography>
+        <Typography sx={{ fontSize: "0.9rem" }}> College : <b style={{fontWeight:"500"}}>{data?.data?.college}</b></Typography>
+        {data?.data?.graduation ? <Typography sx={{ fontSize: "0.9rem" }}>Graduation : <b style={{fontWeight:"500"}}>{data?.data?.graduation}</b></Typography> :""}
+        <Typography sx={{ fontSize: "0.9rem" }}>Grade : <b style={{fontWeight:"500"}}>{data?.data?.gradepercentage}</b></Typography>
+    </div>
 };
 
 const Abroad = (data: any) => {
-    return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <Typography>Preferences</Typography>
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "600" }}>{data?.data?.course}</Typography>
-        <Typography sx={{ fontSize: "1rem" }}>Countries <b>{data?.data?.country?.map((item:string)=>item+" ")}</b></Typography>
-        <Typography fontWeight="500" sx={{ fontSize: "0.9rem" }}>Plan to start <b>{data?.data?.year}</b> </Typography>
-        <Typography sx={{ fontSize: "0.9rem" }}>Budget <b>{data?.data?.educationBudget}</b></Typography>
+    return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center",marginLeft:"1rem" }}>
+        <Typography fontWeight="500">Preferences</Typography>
+        <Typography sx={{ fontSize: "0.9rem" }}>Course : <b style={{fontWeight:"500"}}>{data?.data?.course}</b></Typography>
+        <Typography sx={{ fontSize: "0.9rem" }}>Countries : <b style={{fontWeight:"500"}}>{data?.data?.country?.map((item:string)=><button style={{marginRight:"0.5rem",border:"none",background:"rgb(218 218 233)",borderRadius:"5px",padding:"4px"}}>{item}</button>)}</b></Typography>
+        <Typography  sx={{ fontSize: "0.9rem" }}>Plan to start : <b style={{fontWeight:"500"}}>{data?.data?.year}</b> </Typography>
+        <Typography sx={{ fontSize: "0.9rem" }}>Budget : <b style={{fontWeight:"500"}}>{data?.data?.educationBudget}</b></Typography>
 
     </div>;
 };
 
 const Exams = (data: any) => {
-    return <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <Typography sx={{ fontSize: "1.1rem", fontWeight: "600",mb:1 }}>Aptitute test :{data?.data?.aptitude}</Typography>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "2rem" }}>
-            <Typography sx={{ fontSize: "0.85rem", }}>Gre: <b>{data?.data?.gre ? data?.data?.gre : "N/A"}</b></Typography>
-            <Typography sx={{ fontSize: "0.85rem", }}>Gmat: <b>{data?.data?.gmat ? data?.data?.gmat : "N/A"}</b></Typography>
+    return <div style={{ display: "flex", flexDirection: "column",height:"100px",marginLeft:"1rem" }}>
+        <Typography fontWeight="500">Test scores</Typography>
+        {data?.data?.aptitude ? <Typography sx={{ fontSize: "0.9rem",mb:1 }}>Aptitute test :<b style={{fontWeight:"500"}}>{data?.data?.aptitude }</b></Typography> :""}
+        <div style={{ display: "flex", gap: "2rem" }}>
+            {data?.data?.gre ? <Typography sx={{ fontSize: "0.85rem", }}>Gre: <b style={{fontWeight:"500"}}>{ data?.data?.gre }</b></Typography>:""}
+            { data?.data?.gmat ? <Typography sx={{ fontSize: "0.85rem", }}>Gmat: <b style={{fontWeight:"500"}}>{ data?.data?.gmat }</b></Typography> :""}
+        {data?.data?.act ? <Typography sx={{ fontSize: "0.85rem", }}>ACT: <b style={{fontWeight:"500"}}>{data?.data?.act}</b></Typography> :""}
+        {data?.data?.sat ?  <Typography sx={{ fontSize: "0.85rem", }}>SAT: <b style={{fontWeight:"500"}}>{data?.data?.sat}</b></Typography> :""}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "2rem" }}>
-            <Typography sx={{ fontSize: "0.85rem", }}>ACT: <b>{data?.data?.act ? data?.data?.act : "N/A"}</b></Typography>
-            <Typography sx={{ fontSize: "0.85rem", }}>SAT: <b>{data?.data?.sat ? data?.data?.sat : "N/A"}</b></Typography>
-        </div>
-        <Typography sx={{ fontSize: "1.1rem", fontWeight: "600",mb:1 }}>Language test :{data?.data?.language}</Typography>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "2rem" }}>
-            <Typography sx={{ fontSize: "0.85rem", }}>TOEFL: <b>{data?.data?.toefl ? data?.data?.toefl : "N/A"}</b></Typography>
-            <Typography sx={{ fontSize: "0.85rem", }}>IELTS: <b>{data?.data?.ielts ? data?.data?.ielts : "N/A"}</b></Typography>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "2rem" }}>
-            <Typography sx={{ fontSize: "0.85rem", }}>PTE: <b>{data?.data?.pte ? data?.data?.pte : "N/A"}</b></Typography>
-            <Typography sx={{ fontSize: "0.85rem", }}>Duolingo: <b>{data?.data?.duolingo
-                ? data?.data?.duolingo
-                : "N/A"}</b></Typography>
+        {data?.data?.language ? <Typography sx={{ fontSize: "0.9rem",mb:1 }}>Language test :<b style={{fontWeight:"500"}}>{data?.data?.language}</b></Typography> :""}
+        <div style={{ display: "flex", gap: "2rem" }}>
+          {data?.data?.toefl ?<Typography sx={{ fontSize: "0.85rem", }}>TOEFL: <b style={{fontWeight:"500"}}>{data?.data?.toefl}</b></Typography> :""}
+           {data?.data?.ielts? <Typography sx={{ fontSize: "0.85rem", }}>IELTS: <b>{data?.data?.ielts}</b></Typography>:""}
+        {data?.data?.pte ?  <Typography sx={{ fontSize: "0.85rem", }}>PTE: <b style={{fontWeight:"500"}}>{data?.data?.pte}</b></Typography> :""}
+          {data?.data?.duolingo ?  <Typography sx={{ fontSize: "0.85rem", }}>Duolingo: <b style={{fontWeight:"500"}}>{data?.data?.duolingo}</b></Typography> :""}
         </div>
 
 
@@ -125,7 +118,7 @@ const Section2 = (data: any) => {
                     onClick={goToPrevious}
                     style={{
                         position: 'absolute',
-                        left: '10px',
+                        left: '-22px',
                         top: '50%',
                         transform: 'translateY(-50%)',
                         background: 'none',

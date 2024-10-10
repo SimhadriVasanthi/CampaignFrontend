@@ -3,29 +3,27 @@ import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import Images from '../../assets';
 import { visitAdd } from '../../services';
-import { useAppDispatch} from '../../assets/hooks';
+import { useAppDispatch } from '../../assets/hooks';
 import { updateStudentProfile } from '../../store/slices/studentsInfo';
 import { closePopup } from '../../store/slices/popupSlice';
 import { useNavigate } from 'react-router-dom';
+import { setWordCase } from '../../assets/library';
 
 const SingleUser = (props: any) => {
     const [loading, setLoading] = useState(false);
+    console.log(props)
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const userType = localStorage.getItem("userType")
+    const details = userType !== "Organizer" ? ["eligible","interested"] :["interested","prospective"]
     const initialValues = {
         visitorId: props.id,
-        details: [
-            {
-                label: "eligible",
-                data: props.data?.details?.[0]?.data
-            },
-            {
-                label: "interested",
-                data: props.data?.details?.[1]?.data
-            }
-        ],
+        details: {
+          [details[0]]: props?.data?.details?.[details[0]] || "", 
+          [details[1]]: props?.data?.details?.[details[1]] || "", 
+        },
         notes: props?.data?.notes || "",
-    };
+      };
 
     const submit = async (values: any) => {
         setLoading(true)
@@ -34,9 +32,9 @@ const SingleUser = (props: any) => {
             if (response) {
                 dispatch(
                     updateStudentProfile({
-                        ...response.data.data.user,         
-                        details: response.data.data.visit.details, 
-                        notes: response.data.data.visit.notes,      
+                        ...response.data.data.user,
+                        details: response.data.data.visit.details,
+                        notes: response.data.data.visit.notes,
                     })
                 );
                 setLoading(false)
@@ -62,14 +60,14 @@ const SingleUser = (props: any) => {
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <FormControl fullWidth variant="outlined" size="small">
-                                        <InputLabel id="eligibility-label">Eligibility *</InputLabel>
+                                        <InputLabel id="eligibility-label">{setWordCase(details[0])}*</InputLabel>
                                         <Select
-                                            labelId="eligibility-label"     // ID matches InputLabel
-                                            label="Eligibility"             // Displays "Eligibility" label
-                                            name={`details[0].data`}
-                                            value={values.details?.[0]?.data}
-                                            onChange={(e) => setFieldValue('details[0].data', e.target.value)}
-                                            displayEmpty
+                                            label={details[0]}            
+                                            name={`details.${details[0]}`}
+                                            value={values?.details?.[details[0]]}
+                                            onChange={(e) => setFieldValue(`details.${details[0]}`, e.target.value)}
+                                            // displayEmpty
+                                            // defaultValue=''
                                         >
                                             {["yes", "no"].map((value) => (
                                                 <MenuItem key={value} value={value}>
@@ -82,14 +80,14 @@ const SingleUser = (props: any) => {
 
                                 <Grid item xs={12}>
                                     <FormControl fullWidth variant="outlined" size="small">
-                                        <InputLabel id="interested-label">Interested *</InputLabel>
+                                        <InputLabel id="interested-label">{setWordCase(details[1])} *</InputLabel>
                                         <Select
-                                            labelId="interested-label" 
-                                            label="Interested"          
-                                            name={`details[1].data`}
-                                            value={values.details?.[1]?.data}
-                                            onChange={(e) => setFieldValue('details[1].data', e.target.value)}
-                                            displayEmpty
+                                            // labelId="interested-label"
+                                            label={details[1]}
+                                            name={`details.${details[1]}`}
+                                            value={values?.details?.[details[1]]}
+                                            onChange={(e) => setFieldValue(`details.${details[1]}`, e.target.value)}
+                                            // displayEmpty
                                         >
                                             {["yes", "no"].map((value) => (
                                                 <MenuItem key={value} value={value}>

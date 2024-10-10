@@ -7,8 +7,8 @@ export const registerUserEndPoint = () => {
 };
 
 
-export const singleParticipantEndPoint = (id:string) => {
-  return `api/v1/participants/?s=${id}`;
+export const singleParticipantEndPoint = (id:string,page:number,perPage:number) => {
+  return `api/v1/participants/?s=${id}&page=${page}&perPage=${perPage}`;
 };
 
 export const visitEndPoint = () =>{

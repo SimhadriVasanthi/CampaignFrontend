@@ -8,6 +8,7 @@ import { checkUser, getComponent } from "./assets/library";
 import CustomModal from "./components/layout/customModal";
 import { useAppSelector } from "./assets/hooks";
 import "./App.css";
+import "./assets/fonts/fonts.css";
 import NotFound from "./components/layout/notFound";
 import ProtectedRoute from "./protectedRoute";
 import { FilterSelected } from "./types/types";
@@ -47,7 +48,7 @@ function App() {
 
           <Route element={<ProtectedRoute link={"/"} />}>
           <Route path="/" element={<Counsellor />} />
-          <Route path="/admin" element={<Admin />} />
+          {/* <Route path="/admin" element={<Admin />} /> */}
           <Route path="*" element={<NotFound/>} />
             </Route>
           

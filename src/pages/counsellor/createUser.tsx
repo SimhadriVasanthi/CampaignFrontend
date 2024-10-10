@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import Images from '../../assets';
 import { registerUser } from '../../services';
 import { useAppDispatch } from '../../assets/hooks';
-import { addUserProfile } from '../../store/slices/userInfo';
+// import { addUserProfile } from '../../store/slices/userInfo';
 
 const CreateUser = () => {
     const [loading, setLoading] = useState(false);
-const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
     const generatePassword = () => {
         const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]';
         const passwordLength = 12;
@@ -23,11 +23,10 @@ const dispatch = useAppDispatch();
     const submit = async (values: any) => {
         setLoading(true)
         try {
-        const response = await registerUser(values)
-        dispatch(addUserProfile(response.data.data.user))
-        setLoading(false)
-
-        }catch(err){
+            const response = await registerUser(values)
+            setLoading(false)
+            window.location.reload()
+        } catch (err) {
             setLoading(false)
         }
     };
@@ -39,7 +38,7 @@ const dispatch = useAppDispatch();
         boothNumber: "",
         institutionName: "",
         role: "",
-        userType:"",
+        userType: "",
     };
 
     return (
@@ -76,7 +75,7 @@ const dispatch = useAppDispatch();
                                         onChange={handleChange}
                                     />
                                 </Grid>
-                                           <Grid item xs={12} sx={{ display: 'flex', gap: 2 }}>
+                                <Grid item xs={12} sx={{ display: 'flex', gap: 2 }}>
                                     <TextField
                                         fullWidth
                                         variant="outlined"
@@ -88,7 +87,7 @@ const dispatch = useAppDispatch();
                                         onChange={handleChange}
                                     />
                                     <Button
-                                        sx={{ textTransform: 'none',fontSize:"12px",border:"1px solid #3b3f76",color:"#3b3f76",borderRadius:"15px" }}
+                                        sx={{ textTransform: 'none', fontSize: "12px", border: "1px solid #3b3f76", color: "#3b3f76", borderRadius: "15px" }}
                                         onClick={() => setFieldValue('password', generatePassword())}
                                     >
                                         Generate
@@ -119,7 +118,7 @@ const dispatch = useAppDispatch();
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                <Select
+                                    <Select
                                         fullWidth
                                         variant="outlined"
                                         name={`role`}
@@ -132,7 +131,7 @@ const dispatch = useAppDispatch();
                                         <MenuItem value="">
                                             Select role *
                                         </MenuItem>
-                                        {["Reception","Counsellor","Education_Loan","Applications","Scholarship","Volunteer"].map((value) => (
+                                        {["Reception", "Counsellor", "Education_Loan", "Applications", "Scholarship", "Volunteer"].map((value) => (
                                             <MenuItem key={value} value={value}>
                                                 {value}
                                             </MenuItem>
@@ -140,7 +139,7 @@ const dispatch = useAppDispatch();
                                     </Select>
                                 </Grid>
                                 <Grid item xs={12}>
-                                <Select
+                                    <Select
                                         fullWidth
                                         variant="outlined"
                                         name={`userType`}
@@ -160,36 +159,36 @@ const dispatch = useAppDispatch();
                                         ))}
                                     </Select>
                                 </Grid>
-                                
-                     
+
+
 
                                 <Grid item xs={12} sx={{ textAlign: "right" }}>
-                                <Button
-                             sx={[{
-                                        color: "#fff",
-                                        background: "#3B3F76",
-                                        borderRadius: "15px",
-                                        textTransform: "none",
-                                        fontSize: "0.8rem",
-                                        "&:hover": {
+                                    <Button
+                                        sx={[{
+                                            color: "#fff",
                                             background: "#3B3F76",
-                                        },
-                                    }]}
-                              type="submit"
-                            >
-                              {loading ? (
-                                <img
-                                  src={Images.standardLoader}
-                                  alt="Loading..."
-                                  style={{
-                                    width: "20px",
-                                    height: "20px",
-                                  }}
-                                />
-                              ) : (
-                                "Save"
-                              )}
-                            </Button>
+                                            borderRadius: "15px",
+                                            textTransform: "none",
+                                            fontSize: "0.8rem",
+                                            "&:hover": {
+                                                background: "#3B3F76",
+                                            },
+                                        }]}
+                                        type="submit"
+                                    >
+                                        {loading ? (
+                                            <img
+                                                src={Images.standardLoader}
+                                                alt="Loading..."
+                                                style={{
+                                                    width: "20px",
+                                                    height: "20px",
+                                                }}
+                                            />
+                                        ) : (
+                                            "Save"
+                                        )}
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Form>

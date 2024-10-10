@@ -4,9 +4,10 @@ import { ModalDialogprops } from "../../types/types";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppDispatch } from "../../assets/hooks";
 import { closePopup } from "../../store/slices/popupSlice";
+import { useNavigate } from "react-router-dom";
 
 const CustomModal = ({ open, children,additionalData }: ModalDialogprops<{ width: any;}>) => {
-
+const navigate=useNavigate();
   const dispatch = useAppDispatch();
   return (
     <>
@@ -26,7 +27,9 @@ const CustomModal = ({ open, children,additionalData }: ModalDialogprops<{ width
         }}
       >
         <CloseIcon
-          onClick={()=>dispatch(closePopup())}
+          onClick={()=>{
+            navigate("/")
+            dispatch(closePopup())}}
           sx={{
             position: "absolute",
             right: 14,
