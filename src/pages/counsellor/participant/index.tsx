@@ -7,7 +7,7 @@ import { getParticipantDetails } from '../../../services'
 const Section1 = (data: any) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", background: "rgb(244, 244, 255)", padding: "10px", borderRadius: "10px" }}>
-      <Typography sx={{ fontSize: "1.2rem", fontWeight: "500" }}>{data?.data?.name}</Typography>
+      <Typography sx={{ fontSize: {md:"1.2rem"}, fontWeight: "500" }}>{data?.data?.name}</Typography>
       <Typography fontWeight="500">{data?.data?.about}</Typography>
       <Typography>{data?.data?.city}</Typography>
     </div>

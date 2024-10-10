@@ -91,7 +91,7 @@ const Section2 = (data: any) => {
                     ></span>
                 ))}
             </div>
-
+<div style={{display:"flex",alignItems:"center"}}>
             {activeIndex > 0 && (
                 <button
                     onClick={goToPrevious}
@@ -114,7 +114,7 @@ const Section2 = (data: any) => {
                     onClick={goToNext}
                     style={{
                         position: 'absolute',
-                        right: '10px',
+                        right: '-10px',
                         top: '50%',
                         transform: 'translateY(-50%)',
                         background: 'none',
@@ -126,6 +126,8 @@ const Section2 = (data: any) => {
                     <ChevronRightIcon />
                 </button>
             )}
+
+</div>
         </div>
     );
 };

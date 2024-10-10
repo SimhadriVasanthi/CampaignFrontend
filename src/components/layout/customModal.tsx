@@ -6,8 +6,8 @@ import { useAppDispatch } from "../../assets/hooks";
 import { closePopup } from "../../store/slices/popupSlice";
 import { useNavigate } from "react-router-dom";
 
-const CustomModal = ({ open, children,additionalData }: ModalDialogprops<{ width: any;}>) => {
-const navigate=useNavigate();
+const CustomModal = ({ open, children, additionalData }: ModalDialogprops<{ width: any; }>) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   return (
     <>
@@ -15,8 +15,8 @@ const navigate=useNavigate();
         open={open}
         onClose={() => {
           dispatch(closePopup());
-          setTimeout(() => navigate("/"), 100); 
-      }}
+          setTimeout(() => navigate("/"), 100);
+        }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         PaperProps={{
@@ -30,15 +30,22 @@ const navigate=useNavigate();
         }}
       >
         <CloseIcon
-          onClick={()=>{
+          onClick={() => {
             dispatch(closePopup());
-            setTimeout(() => navigate("/"), 100)}}
+            setTimeout(() => navigate("/"), 100);
+          }}
+          onTouchStart={() => {
+            dispatch(closePopup());
+            setTimeout(() => navigate("/"), 100);
+          }}
           sx={{
             position: "absolute",
-            right: 14,
-            top: 14,
+            right: 0,
+            top: "-4px",
             color: "#E94040",
             cursor: "pointer",
+            padding: "1rem", // Increase clickable area
+            pointerEvents: "all",
           }}
         />
         <DialogContent
