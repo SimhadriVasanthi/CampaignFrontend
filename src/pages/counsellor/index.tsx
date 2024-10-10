@@ -232,7 +232,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           borderRadius: "5px",
           textTransform: "none",
           fontSize: "0.8rem",
-          margin: '10px',
+          margin: '2px',
           "&:hover": {
             background: "#3B3F76",
           },
@@ -379,7 +379,9 @@ const Filters = (props: any) => {
           {details.map((detailKey) => (
             <Grid item xs={4} sm={3} md={2} lg={1.5}>
               <Box key={detailKey} >
-                <FormControl fullWidth variant="outlined" size="small" sx={{}}>
+                <FormControl fullWidth variant="outlined" size="small" sx={{"& .MuiFormLabel-root ":{
+                  zIndex:0
+                }}}>
                   <InputLabel id={`${detailKey}-label`}>{setWordCase(detailKey)}*</InputLabel>
                   <Select
                     label={setWordCase(detailKey)}

@@ -31,7 +31,7 @@ export default function CustomCard({ children, title, disabled, i }: any) {
           cursor: "pointer",
           position: "relative",
           background: disabled ? "gray" : "#F0F1F9",
-          zIndex: 1,
+          // zIndex: 1,
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
         }}
       >
