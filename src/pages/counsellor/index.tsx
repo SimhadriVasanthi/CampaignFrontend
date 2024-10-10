@@ -45,7 +45,7 @@ const Counsellor = () => {
       }
       localStorage.setItem("memberId", response.data.data._id);
       setParticipants(response.data.data.visits);
-      // setTotalPages(response.data.data.totalPages)
+      setTotalPages(response.data.data.totalPages)
       setTotalItems(response.data.data.totalItems)
 
       dispatch(
@@ -113,7 +113,7 @@ const Counsellor = () => {
       ) : (
         <>
           <Filters filterData={filterData} setFilterData={setFilterData} />
-          <Grid container>
+          <Grid container sx={{mt:1}}>
               <Grid item xs={8} lg={12}>
                 <Typography sx={{ display: "flex", gap: "0.5rem", pl: 2 }}>
                   <span style={{ color: "#FFA89C", fontWeight: "500" }}>
@@ -269,7 +269,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     { key: "name", name: "Name", minWidth: 120 },
     { key: "city", name: "City", minWidth: 120 },
     { key: "degree", name: "Education Details", minWidth: 120 },
-    { key: "country", name: "Preferred Country", minWidth: 120 },
+    { key: "country", name: "Preferred Country", minWidth: 150 },
     { key: "course", name: "Preferences ", minWidth: 120 },
     { key: "aptitude", name: "Aptitude", minWidth: 120 },
     { key: "language", name: "Language", minWidth: 120 },
@@ -287,7 +287,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           borderRadius: "5px",
           textTransform: "none",
           fontSize: "0.8rem",
-          margin: '2px',
+          marginLeft: '16px',
           "&:hover": {
             background: "#3B3F76",
           },
@@ -304,7 +304,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
               type: "custom",
             },
           }))}>Create user</Button> : ""}
-      <Box sx={{ display: { xs: "none", lg: "block" } }}>
+      <Box sx={{ display: { xs: "none", lg: "block" }, padding: "1rem" }}>
         <ReusableTable1 columns={studentcolumns} data={mapStudentData(students)} />
       </Box>
       <Box sx={{ display: { xs: "block", lg: "none" }, padding: "1rem" }}>
