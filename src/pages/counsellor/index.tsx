@@ -27,20 +27,20 @@ const Counsellor = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<"students">("students");
-  const [currentPage,setCurrentPage] = useState<number>(1)
-  const [totalPages,setTotalPages] = useState<number|undefined>()
-  const [totalItems,setTotalItems] = useState<any>()
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number | undefined>()
+  const [totalItems, setTotalItems] = useState<any>()
 
   const startItem = (currentPage - 1) * 20 + 1;
   const endItem = Math.min(currentPage * 20, totalItems);
 
   const getMember = async () => {
-    setLoading(true); 
+    setLoading(true);
     try {
       const response = await getParticipantDetails("", currentPage, 20, { filterData });
       if (!response || !response.data || !response.data.data) {
         console.error("No valid data in response");
-        setLoading(false); 
+        setLoading(false);
         return;
       }
       localStorage.setItem("memberId", response.data.data._id);
@@ -60,7 +60,7 @@ const Counsellor = () => {
     } catch (err) {
       console.error("Error fetching participant details:", err);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -68,7 +68,7 @@ const Counsellor = () => {
     if (auth) {
       getMember();
     }
-  }, [filterData,currentPage]);
+  }, [filterData, currentPage]);
 
   return (
     <Box>
@@ -106,14 +106,17 @@ const Counsellor = () => {
         <Index />
       </Box>
 
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '16px' }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <>
-          <Filters filterData={filterData} setFilterData={setFilterData} />
-          <Grid container sx={{mt:1}}>
+
+      <>
+        <Filters filterData={filterData} setFilterData={setFilterData} />
+
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', padding: '16px' }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <Grid container sx={{ mt: 1 }}>
               <Grid item xs={8} lg={12}>
                 <Typography sx={{ display: "flex", gap: "0.5rem", pl: 2 }}>
                   <span style={{ color: "#FFA89C", fontWeight: "500" }}>
@@ -127,27 +130,28 @@ const Counsellor = () => {
                 </Typography>
               </Grid>
             </Grid>
-          <MainComponent activeTab={activeTab} students={participants} />
-          <Pagination
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  mt: 1,
-                  "& .MuiPaginationItem-root.Mui-selected": {
-                    background: "#3B3F76 !important",
-                    color: "#fff",
-                  },
-                }}
-                count={totalPages}
-                page={currentPage}
-                onChange={(event, value) =>
-                  setCurrentPage(value)
-                }
-                showFirstButton
-                showLastButton
-              />
-        </>
-      )}
+            <MainComponent activeTab={activeTab} students={participants} />
+            <Pagination
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                mt: 1,
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  background: "#3B3F76 !important",
+                  color: "#fff",
+                },
+              }}
+              count={totalPages}
+              page={currentPage}
+              onChange={(event, value) =>
+                setCurrentPage(value)
+              }
+              showFirstButton
+              showLastButton
+            />
+          </>)}
+
+      </>
     </Box>
   );
 };
@@ -335,7 +339,7 @@ interface FiltersProps {
 const Filters = (props: any) => {
   const [search, setSearch] = useState("");
   const userType = localStorage.getItem("userType");
-  const details = userType !== "Organizer" ? ["eligible", "interested"] : ["interested", "prospective"];
+  const details = userType === "Exhibitor" ? ["eligible", "interested"] : userType === "Organizer" ? ["interested", "prospective"] : [];
 
   const [selectedValues, setSelectedValues] = useState<{ [key: string]: string | null }>({});
 
@@ -432,7 +436,7 @@ const Filters = (props: any) => {
             </Box>
           </Grid>
           {details.map((detailKey) => (
-            <Grid item xs={4} sm={3} md={2} lg={1.5}>
+            <Grid item xs={6} sm={3} md={2} lg={1.5}>
               <Box key={detailKey} >
                 <FormControl fullWidth variant="outlined" size="small" sx={{
                   "& .MuiFormLabel-root ": {

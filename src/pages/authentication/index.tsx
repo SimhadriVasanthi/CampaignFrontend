@@ -61,9 +61,9 @@ const LoginComp = () => {
   // console.log(login)
 
   return (
-    <Box sx={{ height: "100%" }}>
+    <Box sx={{ height: "100vh" }}>
       <Grid container sx={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <Grid item xs={12} md={6.5} sx={{ padding: "2rem", background: "#d1d3f933", borderRadius: "10px" }}>
+        <Grid item xs={12} md={8.5} xl={8}  sx={{ padding: {sm:"2rem"}, background: "#d1d3f933", borderRadius: "10px",margin:{xs:"1rem",sm:"4rem"} }}>
           <Box sx={{ my: 3 }}>
             <Box sx={{ mb: 1.5, display: "flex", justifyContent: "center" }}>
               <Box component="img" src={Images.campusrootLogo} alt="logo" sx={{ width: { xs: "120px", md: "180px" } }} />

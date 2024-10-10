@@ -136,9 +136,9 @@ export const ParticipantCard = (props: any) => {
             fontSize:"0.8rem !important" 
           }
             }}>
-             {participant?.institutionName && <Typography>{participant?.institutionName}</Typography> } 
-             {participant?.role && <Typography>{participant?.role}</Typography> }
-             {participant?.boothNumber && <Typography>{participant?.boothNumber}</Typography> }
+             {participant?.institutionName && <Typography>Institution : {participant?.institutionName}</Typography> } 
+             {participant?.role && <Typography>Role : {participant?.role}</Typography> }
+             {participant?.boothNumber && <Typography>Booth Number : {participant?.boothNumber}</Typography> }
             </Box>
           <Typography variant="body2" color="textSecondary">
 
@@ -156,6 +156,10 @@ export const ParticipantCard = (props: any) => {
 
           </Typography>
           <Typography color="textSecondary">{participant?.city}</Typography>
+          {(participant?.degree || 
+              participant?.college
+              ||participant?.gradepercentage
+              ||participant?.graduation) && 
           <Box sx={{ display: "flex", flexDirection: "column", fontSize: "0.8rem", gap: "0.25rem" }}>
             <Typography sx={{ fontSize: "0.9rem", }}>Education Details :</Typography>
             <Box sx={{color:"rgba(0, 0, 0, 0.6)"}}>
@@ -164,7 +168,7 @@ export const ParticipantCard = (props: any) => {
               {participant?.gradepercentage},
               {participant?.graduation}
             </Box>
-          </Box>
+          </Box> }
         </div>
       </CustomCard>
     </div>
