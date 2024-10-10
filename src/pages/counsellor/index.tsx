@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Box, Button, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography, } from "@mui/material";
+import { Box, Button, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Pagination, Select, TextField, Typography, } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../assets/hooks";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -21,27 +21,33 @@ import { initProfile } from "../../store/slices/profileInfo";
 import Index from "../qr";
 
 const Counsellor = () => {
-
-  const auth = localStorage.getItem("_campaign_token")
-  // const role = localStorage.getItem("role");
-  const [filterData, setFilterData] = useState([])
-  const [participants, setParticipants] = useState([])
+  const auth = localStorage.getItem("_campaign_token");
+  const [filterData, setFilterData] = useState([]);
+  const [participants, setParticipants] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const [activeTab, setActiveTab] = useState<
-    "students"
-  >("students");
+  const [activeTab, setActiveTab] = useState<"students">("students");
+  const [currentPage,setCurrentPage] = useState<number>(1)
+  const [totalPages,setTotalPages] = useState<number|undefined>()
+  const [totalItems,setTotalItems] = useState<any>()
+
+  const startItem = (currentPage - 1) * 20 + 1;
+  const endItem = Math.min(currentPage * 20, totalItems);
 
   const getMember = async () => {
+    setLoading(true); 
     try {
-      const response = await getParticipantDetails("", 1, 20, {
-        filterData: filterData
-      });
+      const response = await getParticipantDetails("", currentPage, 20, { filterData });
       if (!response || !response.data || !response.data.data) {
         console.error("No valid data in response");
+        setLoading(false); 
         return;
       }
       localStorage.setItem("memberId", response.data.data._id);
-      setParticipants(response.data.data.visits)
+      setParticipants(response.data.data.visits);
+      // setTotalPages(response.data.data.totalPages)
+      setTotalItems(response.data.data.totalItems)
+
       dispatch(
         initProfile({
           requestStatus: "initiated",
@@ -53,15 +59,16 @@ const Counsellor = () => {
       );
     } catch (err) {
       console.error("Error fetching participant details:", err);
+    } finally {
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
     if (auth) {
-      getMember()
+      getMember();
     }
-  }, [filterData])
-
+  }, [filterData,currentPage]);
 
   return (
     <Box>
@@ -75,7 +82,13 @@ const Counsellor = () => {
         }}
       >
         <Box
-          sx={{ display: "flex", justifyContent: "space-between", gap: "15px", alignItems: "center", width: "100%" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "15px",
+            alignItems: "center",
+            width: "100%",
+          }}
         >
           <Button
             onClick={() => setActiveTab("students")}
@@ -91,13 +104,50 @@ const Counsellor = () => {
           </Button>
         </Box>
         <Index />
-
       </Box>
-      <Filters filterData={filterData} setFilterData={setFilterData} />
-      <MainComponent
-        activeTab={activeTab}
-        students={participants}
-      />
+
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '16px' }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <Filters filterData={filterData} setFilterData={setFilterData} />
+          <Grid container>
+              <Grid item xs={8} lg={12}>
+                <Typography sx={{ display: "flex", gap: "0.5rem", pl: 2 }}>
+                  <span style={{ color: "#FFA89C", fontWeight: "500" }}>
+                    {startItem}-{endItem}
+                  </span>
+                  out of
+                  <span style={{ color: "#FFA89C", fontWeight: "500" }}>
+                    {totalItems}
+                  </span>
+                  results
+                </Typography>
+              </Grid>
+            </Grid>
+          <MainComponent activeTab={activeTab} students={participants} />
+          <Pagination
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mt: 1,
+                  "& .MuiPaginationItem-root.Mui-selected": {
+                    background: "#3B3F76 !important",
+                    color: "#fff",
+                  },
+                }}
+                count={totalPages}
+                page={currentPage}
+                onChange={(event, value) =>
+                  setCurrentPage(value)
+                }
+                showFirstButton
+                showLastButton
+              />
+        </>
+      )}
     </Box>
   );
 };
