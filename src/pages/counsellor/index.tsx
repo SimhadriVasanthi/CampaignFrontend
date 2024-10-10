@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Box, Button, Grid, Typography, } from "@mui/material";
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography, } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../assets/hooks";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -16,13 +16,14 @@ import { setPopup } from "../../store/slices/popupSlice";
 import { useLocation } from "react-router-dom";
 import { getParticipantDetails } from "../../services";
 import { setWordCase } from "../../assets/library";
-import { AnyAaaaRecord } from "dns";
+import SearchIcon from '@mui/icons-material/Search';
 import { initProfile } from "../../store/slices/profileInfo";
 
 const Counsellor = () => {
 
   const auth = localStorage.getItem("_campaign_token")
-  const role = localStorage.getItem("role");
+  // const role = localStorage.getItem("role");
+  const [filterData,setFilterData] = useState([])
   const [participants, setParticipants] = useState([])
   const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<
@@ -32,7 +33,7 @@ const Counsellor = () => {
   const getMember = async () => {
     try {
       const response = await getParticipantDetails("", 1, 20, {
-        filterData: []
+        filterData: filterData 
       });
       if (!response || !response.data || !response.data.data) {
         console.error("No valid data in response");
@@ -58,7 +59,7 @@ const Counsellor = () => {
     if (auth) {
       getMember()
     }
-  }, [])
+  }, [filterData])
 
 
   return (
@@ -89,7 +90,7 @@ const Counsellor = () => {
           </Button>
         </Box>
       </Box>
-      <Filters/>
+      <Filters filterData={filterData} setFilterData={setFilterData}/>
       <MainComponent
         activeTab={activeTab}
         students={participants}
@@ -153,17 +154,17 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 id={participant?._id}
                 type={participant?.userType}
               />
-              { role === "Admin" ? "" : 
-              <Box sx={{ }}>
-                {
-                 event?.details &&  Object.entries(event?.details).map(([key, value]: [string, any]) => (
-                    <div key={key}>
-                      {setWordCase(key)}: {value}
-                      <br />
-                    </div>
-                  ))
-                }
-              </Box> }
+              {role === "Admin" ? "" :
+                <Box sx={{}}>
+                  {
+                    event?.details && Object.entries(event?.details).map(([key, value]: [string, any]) => (
+                      <div key={key}>
+                        {setWordCase(key)}: {value}
+                        <br />
+                      </div>
+                    ))
+                  }
+                </Box>}
             </>
           ),
           city: participant?.city,
@@ -196,10 +197,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
             </Box>),
           aptitude: (<>
             {participant?.aptitude}<br />
-            {participant.gre ? <Typography sx={{ fontSize: "0.85rem", }}>Gre: <b style={{fontWeight:"500"}}>{ participant.gre }</b></Typography>:""}
-            { participant.gmat ? <Typography sx={{ fontSize: "0.85rem", }}>Gmat: <b style={{fontWeight:"500"}}>{ participant.gmat }</b></Typography> :""}
-        {participant.act ? <Typography sx={{ fontSize: "0.85rem", }}>ACT: <b style={{fontWeight:"500"}}>{participant.act}</b></Typography> :""}
-        {participant.sat ?  <Typography sx={{ fontSize: "0.85rem", }}>SAT: <b style={{fontWeight:"500"}}>{participant.sat}</b></Typography> :""}
+            {participant.gre ? <Typography sx={{ fontSize: "0.85rem", }}>Gre: <b style={{ fontWeight: "500" }}>{participant.gre}</b></Typography> : ""}
+            {participant.gmat ? <Typography sx={{ fontSize: "0.85rem", }}>Gmat: <b style={{ fontWeight: "500" }}>{participant.gmat}</b></Typography> : ""}
+            {participant.act ? <Typography sx={{ fontSize: "0.85rem", }}>ACT: <b style={{ fontWeight: "500" }}>{participant.act}</b></Typography> : ""}
+            {participant.sat ? <Typography sx={{ fontSize: "0.85rem", }}>SAT: <b style={{ fontWeight: "500" }}>{participant.sat}</b></Typography> : ""}
           </>),
           language: (<>
             {participant?.language}<br />
@@ -262,10 +263,108 @@ const MainComponent: React.FC<MainComponentProps> = ({
   );
 };
 
-const Filters = () =>{
-  return (
-    <div>
-      <Typography sx={{mt:1}}>Filters</Typography>
-    </div>
-  )
+type FilterData = {
+  type: string;
+  label?: string;
+  data: string[];
+};
+
+interface FiltersProps {
+  filterData: any;
+  setFilterData: (filters: any) => void;
 }
+
+const Filters: React.FC<FiltersProps> = (props) => {
+  const [search, setSearch] = useState<string>("");
+  const userType = localStorage.getItem("userType");
+  const details = userType !== "Organizer" ? ["eligible", "interested"] : ["interested", "prospective"];
+
+  const handleSelectChange = (label: string, value: string): void => {
+    const existingFilters = [...props.filterData];
+    const existingFilterIndex = existingFilters.findIndex(
+      (filter) => filter.type === "label" && filter.label === label
+    );
+
+    if (existingFilterIndex > -1) {
+      if (existingFilters[existingFilterIndex].data[0] === value) {
+        const updatedFilters = existingFilters.filter(
+          (_, index) => index !== existingFilterIndex
+        );
+        props.setFilterData(updatedFilters);
+      } else {
+        const updatedFilters = existingFilters.map((filter, index) => {
+          if (index === existingFilterIndex) {
+            return { ...filter, data: [value] }; 
+          }
+          return filter;
+        });
+        props.setFilterData(updatedFilters); 
+      }
+    } else {
+      const formattedData: FilterData = {
+        type: "label",
+        label: label,
+        data: [value],
+      };
+      props.setFilterData([...existingFilters, formattedData]);
+    }
+  };
+
+  const handleSearchClick = (): void => {
+    const searchFormattedData: FilterData = {
+      type: "name",
+      data: [search],
+    };
+    props.setFilterData([...props.filterData, searchFormattedData]);
+  };
+
+  return (
+    <div style={{ marginLeft: "1rem" }}>
+      <Typography sx={{ mt: 1 }}>Filters</Typography>
+      <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          <TextField
+            variant="outlined"
+            size="small"
+            value={search}
+            placeholder="Search name"
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-input": {
+                padding: "6px",
+              },
+            }}
+          />
+          <Button
+            sx={{ textTransform: "none", background: "#3b3f76", width: "35px", minWidth: "0" }}
+            onClick={handleSearchClick} // Handle search button click
+          >
+            <SearchIcon sx={{ color: "#fff" }} />
+          </Button>
+        </Box>
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          {details.map((detailKey) => (
+            <Box key={detailKey} sx={{ ml: 2 }}>
+              <FormControl fullWidth variant="outlined" size="small" sx={{ width: "130px" }}>
+                <InputLabel id={`${detailKey}-label`}>{setWordCase(detailKey)}</InputLabel>
+                <Select
+                  label={setWordCase(detailKey)}
+                  name={`details.${detailKey}`}
+                  onChange={(e:any) => handleSelectChange(detailKey, e.target.value)} // Handle onChange with the formatted data
+                >
+                  {["yes", "no"].map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </div>
+  );
+};
+
+

@@ -11,7 +11,6 @@ import { setWordCase } from '../../assets/library';
 
 const SingleUser = (props: any) => {
     const [loading, setLoading] = useState(false);
-    console.log(props)
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const userType = localStorage.getItem("userType")
