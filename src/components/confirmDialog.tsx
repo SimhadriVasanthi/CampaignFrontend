@@ -17,14 +17,14 @@ const ConfirmDialog = ({
   additionalData,
 }: ModalDialogprops<{
   title: string;
-  content?: string;
+  content?: any;
   onSubmit: any;
 }>) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const styles = {
     ".MuiPaper-root": {
-      width: "23rem",
+      width: "25rem",
       borderRadius: "5px",
       padding: "10px",
       ".MuiDialogContent-root .MuiTypography-root": {
@@ -54,16 +54,11 @@ const ConfirmDialog = ({
         aria-describedby="alert-dialog-description"
         sx={styles}
       >
-        <DialogTitle id="alert-dialog-title" sx={{ fontSize: "1rem" }}>
+        <DialogTitle id="alert-dialog-title" sx={{ fontSize: "1.25rem",fontWeight:600,textAlign:"center" }}>
           {additionalData?.title}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText
-            id="alert-dialog-description"
-            sx={{ fontSize: "0.8rem", fontWeight: 500 }}
-          >
             {additionalData?.content}
-          </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "space-evenly" }}>
           <Button
@@ -72,8 +67,9 @@ const ConfirmDialog = ({
             sx={{
               background: "#3B3F76",
               color: "#fff",
-              borderRadius: "5px",
+              borderRadius: "20px",
               textTransform: "none",
+              width:"80px",
               "&:hover": {
                 background: "#3B3F76",
                 color: "#fff",
@@ -91,9 +87,10 @@ const ConfirmDialog = ({
             disabled={loading} 
             sx={{
               border: "1px solid #FEB853",
-              borderRadius: "5px",
+              borderRadius: "20px",
               color: "#FEB853",
               textTransform: "none",
+              width:"80px",
             }}
           >
             Cancel

@@ -3,12 +3,10 @@ import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import Images from '../../assets';
 import { registerUser } from '../../services';
-import { useAppDispatch } from '../../assets/hooks';
 // import { addUserProfile } from '../../store/slices/userInfo';
 
 const CreateUser = () => {
     const [loading, setLoading] = useState(false);
-    const dispatch = useAppDispatch();
     const generatePassword = () => {
         const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]';
         const passwordLength = 12;
@@ -121,6 +119,27 @@ const CreateUser = () => {
                                     <Select
                                         fullWidth
                                         variant="outlined"
+                                        name={`userType`}
+                                        value={values.userType}
+                                        onChange={handleChange}
+                                        size="small"
+                                        defaultValue=''
+                                        displayEmpty
+                                    >
+                                        <MenuItem value="" disabled>
+                                            Select user type *
+                                        </MenuItem>
+                                        {["Organizer", "Exhibitor"].map((value) => (
+                                            <MenuItem key={value} value={value}>
+                                                {value}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Select
+                                        fullWidth
+                                        variant="outlined"
                                         name={`role`}
                                         value={values.role}
                                         onChange={handleChange}
@@ -138,27 +157,7 @@ const CreateUser = () => {
                                         ))}
                                     </Select>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Select
-                                        fullWidth
-                                        variant="outlined"
-                                        name={`userType`}
-                                        value={values.userType}
-                                        onChange={handleChange}
-                                        size="small"
-                                        defaultValue=''
-                                        displayEmpty
-                                    >
-                                        <MenuItem value="" disabled>
-                                            Select user type *
-                                        </MenuItem>
-                                        {["Admin", "Organizer", "Exhibitor"].map((value) => (
-                                            <MenuItem key={value} value={value}>
-                                                {value}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </Grid>
+                                
 
 
 

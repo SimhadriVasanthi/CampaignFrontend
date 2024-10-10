@@ -158,8 +158,12 @@ const LoginComp = () => {
         handleClose={() => setOpen(false)}
         additionalData={{
           onSubmit: onSubmitForm, 
-          title: "",
-          content:"",
+          title: "Attention Delegates",
+          content:<ul style={{margin:0,padding:0}}>
+            <li style={{lineHeight:"24px",color:"gray"}}>To protect attendee privacy, <b style={{color:"#000"}}>please do not collect</b>  students contact information or email addresses during the education fair.</li>
+            <li style={{lineHeight:"24px",color:"gray"}}>After the event, the One Window team will follow up with students using conversation notes for application processing.</li>
+          </ul>
+          
         }}
       />
     </Box>
