@@ -94,7 +94,7 @@ const visitAdd = async (values: object) => {
 const getParticipantDetails = async (studentId: string,page:number,perPage:number,values:object) => {
   try {
     const response = await api
-      .post(singleParticipantEndPoint(studentId,page,perPage),values, headers)
+      .post(singleParticipantEndPoint(studentId||"",page,perPage),values, headers)
     return response;
   } catch (err: any) {
     const errorResponse = handleApiError(err);

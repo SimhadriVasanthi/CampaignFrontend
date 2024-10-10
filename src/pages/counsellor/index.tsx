@@ -18,6 +18,7 @@ import { getParticipantDetails } from "../../services";
 import { setWordCase } from "../../assets/library";
 import SearchIcon from '@mui/icons-material/Search';
 import { initProfile } from "../../store/slices/profileInfo";
+import Index from "../qr";
 
 const Counsellor = () => {
 
@@ -90,11 +91,11 @@ const Counsellor = () => {
           </Button>
         </Box>
       </Box>
+      <Index/>
       <Filters filterData={filterData} setFilterData={setFilterData} />
       <MainComponent
         activeTab={activeTab}
         students={participants}
-      // users={usersData?.data}
       />
     </Box>
   );
@@ -211,13 +212,14 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
   const studentcolumns = [
     { key: "name", name: "Name", minWidth: 120 },
-    { key: "delegate", name: "Delegate", minWidth: 120 },
     { key: "city", name: "City", minWidth: 120 },
     { key: "degree", name: "Recent Degree", minWidth: 120 },
     { key: "country", name: "Preferred Country", minWidth: 120 },
     { key: "course", name: "Preferences ", minWidth: 120 },
     { key: "aptitude", name: "Aptitude", minWidth: 120 },
     { key: "language", name: "Language", minWidth: 120 },
+    { key: "delegate", name: "Delegate/Team", minWidth: 120 },
+
 
   ];
 
@@ -250,7 +252,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
       <Box sx={{ display: { xs: "none", lg: "block" } }}>
         <ReusableTable1 columns={studentcolumns} data={mapStudentData(students)} />
       </Box>
-      <Box sx={{ display: { xs: "block", lg: "none" } }}>
+      <Box sx={{ display: { xs: "block", lg: "none" },padding:"1rem" }}>
         <Grid container>
           {students?.map((item: any, i: number) => (
             <Grid item xs={12} md={6} key={i}>

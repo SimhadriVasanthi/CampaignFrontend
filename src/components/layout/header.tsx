@@ -59,18 +59,18 @@ const Header = (props: FilterProps) => {
                   alignItems: "center",
                   height: "50px",
                   gap: "8px",
-                  flexDirection:{xs:"row",lg:"column"}
+                  // flexDirection:{xs:"row",lg:"column"}
                 }}
               >
                 <Typography sx={{ color: "#000", fontWeight: "600" }}>
                    {profile?.data?.name} 
                 </Typography>
-                <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
+                {/* <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
                    {profile?.data?.institutionName} 
                 </Typography>
                 <Typography sx={{ color: "#000",fontSize:"0.85rem",fontWeight:400}}>
                    {profile?.data?.role} 
-                </Typography>
+                </Typography> */}
               </Box>
               <Button
                 sx={[{

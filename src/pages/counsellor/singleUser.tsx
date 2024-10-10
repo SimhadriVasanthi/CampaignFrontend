@@ -68,7 +68,7 @@ const SingleUser = (props: any) => {
                                             // displayEmpty
                                             // defaultValue=''
                                         >
-                                            {["yes", "no"].map((value) => (
+                                            {["Yes", "No"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
                                                 </MenuItem>
