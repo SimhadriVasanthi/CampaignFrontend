@@ -99,9 +99,9 @@
 .close {
   color: #aaa;
   float: right;
-  font-size: 28px;
+  font-size: 40px;
   font-weight: bold;
-  margin-top:-25px;
+  margin-top:-35px;
 }
 
 .close:hover,

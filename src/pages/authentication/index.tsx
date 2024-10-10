@@ -5,8 +5,6 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  Typography,
-  Checkbox
 } from "@mui/material";
 import { ErrorMessage, Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -17,16 +15,16 @@ import { useNavigate } from "react-router-dom";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { checkUser } from "../../assets/library";
+import ConfirmDialog from "../../components/confirmDialog";
 
 const LoginComp = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [open, setOpen] = useState(false)
+  const [login,setLogin] = useState<any>()
   const initValues = {
     email: "",
     password: "",
-    privacyPolicy: false, 
   };
 
   const loginSchema = Yup.object().shape({
@@ -37,13 +35,12 @@ const LoginComp = () => {
     password: Yup.string()
       .required("Password is required")
       .min(8, "Password must be at least 8 characters"),
-    privacyPolicy: Yup.bool().oneOf([true], "You must agree to the Privacy Policy"), // Checkbox validation
   });
 
-  const onSubmitForm = async (values: any) => {
-    setLoading(true);
+  const onSubmitForm = async () => {
+    // setLoading(true);
     try {
-      const response = await authenticateLogin(values);
+      const response = await authenticateLogin(login);
       if (response.data.success) {
         localStorage.setItem("role", response.data.data.role);
         localStorage.setItem("userType", response.data.data.userType);
@@ -53,9 +50,15 @@ const LoginComp = () => {
         window.location.reload();
       }
     } catch (err) {
-      setLoading(false);
+      // setLoading(false);
     }
   };
+
+  const handleOpen = (values:any) => {
+    setOpen(true)
+    setLogin(values)
+  }
+  console.log(login)
 
   return (
     <Box sx={{ height: "100%" }}>
@@ -72,10 +75,10 @@ const LoginComp = () => {
                   <Formik
                     initialValues={initValues}
                     validationSchema={loginSchema}
-                    onSubmit={onSubmitForm}
+                    onSubmit={(values:any) =>handleOpen(values)}
                     enableReinitialize={true}
                   >
-                    {({ errors, touched, values, handleChange, handleSubmit, setFieldValue }) => (
+                    {({ errors, touched, values, handleChange, handleSubmit}) => (
                       <Form onSubmit={handleSubmit}>
                         <Grid container spacing={1.25}>
                           <Grid item xs={12}>
@@ -121,15 +124,7 @@ const LoginComp = () => {
                               <ErrorMessage name="password" component="div" />
                             </div>
                           </Grid>
-                          <Grid item xs={12} sx={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
-                            <Checkbox
-                              name="privacyPolicy"
-                              checked={values.privacyPolicy}
-                              onChange={(e) => setFieldValue("privacyPolicy", e.target.checked)}
-                            />
-                            <Typography>Privacy Policy</Typography>
-                          </Grid>
-                          <div style={{ color: "#e60c0c", fontSize: "12px", textAlign: "start",marginLeft:"20px" }}>
+                          <div style={{ color: "#e60c0c", fontSize: "12px", textAlign: "start", marginLeft: "20px" }}>
                             <ErrorMessage name="privacyPolicy" component="div" />
                           </div>
                           <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -141,20 +136,11 @@ const LoginComp = () => {
                                   textTransform: "none",
                                   color: "#fff",
                                   borderRadius: "15px",
-                                  // padding: 0,
                                 },
                               ]}
                               type="submit"
                             >
-                              {loading ? (
-                                <img
-                                  src={Images.standardLoader}
-                                  alt="Loading..."
-                                  style={{ width: "20px", height: "20px" }}
-                                />
-                              ) : (
-                                "Continue"
-                              )}
+                                Continue
                             </Button>
                           </Grid>
                         </Grid>
@@ -167,6 +153,15 @@ const LoginComp = () => {
           </Box>
         </Grid>
       </Grid>
+      <ConfirmDialog
+        open={open}
+        handleClose={() => setOpen(false)}
+        additionalData={{
+          onSubmit: onSubmitForm, 
+          title: "",
+          content:"",
+        }}
+      />
     </Box>
   );
 };

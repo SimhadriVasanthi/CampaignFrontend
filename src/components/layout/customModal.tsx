@@ -13,7 +13,10 @@ const navigate=useNavigate();
     <>
       <Dialog
         open={open}
-        // onClose={()=>dispatch(closePopup())}
+        onClose={() => {
+          dispatch(closePopup());
+          setTimeout(() => navigate("/"), 100); 
+      }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         PaperProps={{
@@ -28,8 +31,8 @@ const navigate=useNavigate();
       >
         <CloseIcon
           onClick={()=>{
-            navigate("/")
-            dispatch(closePopup())}}
+            dispatch(closePopup());
+            setTimeout(() => navigate("/"), 100)}}
           sx={{
             position: "absolute",
             right: 14,

@@ -75,7 +75,7 @@ const Counsellor = () => {
         }}
       >
         <Box
-          sx={{ display: "flex", justifyContent: "space-between", gap: "15px" }}
+          sx={{ display: "flex", justifyContent: "space-between", gap: "15px",alignItems:"center",width:"100%" }}
         >
           <Button
             onClick={() => setActiveTab("students")}
@@ -90,8 +90,9 @@ const Counsellor = () => {
             Participants
           </Button>
         </Box>
+        <Index/>
+
       </Box>
-      <Index/>
       <Filters filterData={filterData} setFilterData={setFilterData} />
       <MainComponent
         activeTab={activeTab}
@@ -387,7 +388,7 @@ const Filters = (props: any) => {
                     label={setWordCase(detailKey)}
                     value={selectedValues[detailKey] || ""}
                   >
-                    {["yes", "no"].map((value) => (
+                    {["Yes", "No","May be"].map((value) => (
                       <MenuItem
                         key={value}
                         value={value}

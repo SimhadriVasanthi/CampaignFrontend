@@ -7,7 +7,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="App">
-      <QrCodeScannerIcon sx={{ width: '100px', cursor: 'pointer' }} onClick={()=>setShowModal(true)} />
+      <QrCodeScannerIcon sx={{ width: '100px', cursor: 'pointer',color:"#fff",fontSize:"2.5rem" }} onClick={()=>setShowModal(true)} />
       {showModal && (
         <div className="modal">
           <div className="modal-content">

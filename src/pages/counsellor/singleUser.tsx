@@ -68,7 +68,7 @@ const SingleUser = (props: any) => {
                                             // displayEmpty
                                             // defaultValue=''
                                         >
-                                            {["Yes", "No"].map((value) => (
+                                            {["Yes", "No","May be"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
                                                 </MenuItem>
@@ -88,7 +88,7 @@ const SingleUser = (props: any) => {
                                             onChange={(e) => setFieldValue(`details.${details[1]}`, e.target.value)}
                                             // displayEmpty
                                         >
-                                            {["yes", "no"].map((value) => (
+                                            {["Yes", "No","May be"].map((value) => (
                                                 <MenuItem key={value} value={value}>
                                                     {value}
                                                 </MenuItem>

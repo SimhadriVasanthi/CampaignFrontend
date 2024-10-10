@@ -34,10 +34,11 @@ export const StudentName = (props: any) => {
   return (
     <div>
       <Box
-        sx={{ display: "flex", gap: "20px", alignItems: "center", cursor: "pointer" }}
-        onClick={handleClick}
+        sx={{ display: "flex", gap: "20px", alignItems: "center", cursor: "pointer",}}
       >
+        <Typography sx={{"&:hover":{color:"#5050e4"} }} onClick={handleClick}>
         {props?.name}
+        </Typography>
       </Box>
     </div>
   );

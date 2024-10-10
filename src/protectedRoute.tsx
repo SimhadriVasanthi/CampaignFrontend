@@ -9,9 +9,8 @@ const isAuthenticated = () => {
 const ProtectedRoute: React.FC<{ link: string }> = ({ link }) => {
   const location = useLocation();
   const queryParams:any = new URLSearchParams(location.search);
-  localStorage.setItem("tempId",queryParams.get("s"))
-  localStorage.setItem("tempP",queryParams.get("p"))
-
+  localStorage.setItem("tempId",queryParams.get("s")||"")
+  localStorage.setItem("tempP",queryParams.get("p")||"")
   if (!isAuthenticated()) {
     return <Navigate to="/login" />;
   }

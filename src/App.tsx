@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Admin from "./pages/admin";
+// import Admin from "./pages/admin";
 import Login from "./pages/authentication";
 import Counsellor from "./pages/counsellor";
 import Header from "./components/layout/header";
