@@ -210,6 +210,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 id={participant?._id}
                 type={participant?.userType}
               />
+               {participant?.qrCodeUrl && 
+            <a href={participant?.qrCodeUrl} target="_blank" rel="noreferrer" style={{textDecoration:"none"}}>QR Code</a>
+            }
               {role === "Admin" ? "" :
                 <Box sx={{}}>
                   {

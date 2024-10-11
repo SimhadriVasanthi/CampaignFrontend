@@ -140,6 +140,9 @@ export const ParticipantCard = (props: any) => {
              {participant?.role && <Typography>Role : {participant?.role}</Typography> }
              {participant?.boothNumber && <Typography>Booth Number : {participant?.boothNumber}</Typography> }
             </Box>
+            {participant?.qrCodeUrl && 
+            <a href={participant?.qrCodeUrl} target="_blank" rel="noreferrer" style={{textDecoration:"none"}}>QR Code</a>
+            }
           <Typography variant="body2" color="textSecondary">
 
             {role === "Admin" ? "" :
